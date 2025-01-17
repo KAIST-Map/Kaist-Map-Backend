@@ -38,10 +38,10 @@ async function bootstrap() {
 
   // Swagger 설정
   const config = new DocumentBuilder()
-    .setTitle("Eventory Server")
-    .setDescription("Eventory API description")
+    .setTitle("Kaistmap Server")
+    .setDescription("Kaistmap API description")
     .setVersion("1.0")
-    .addTag("Eventory")
+    .addTag("Kaistmap")
     .addBearerAuth()
     .build();
 
