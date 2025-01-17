@@ -54,4 +54,10 @@ export class EdgeListDto {
     type: [EdgeDto],
   })
   edges!: EdgeDto[];
+
+  static from(edges: EdgeData[]): EdgeListDto {
+    return {
+      edges: EdgeDto.fromArray(edges),
+    };
+  }
 }
