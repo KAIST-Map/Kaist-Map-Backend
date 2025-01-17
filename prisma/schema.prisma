@@ -19,10 +19,10 @@ model Node {
   latitude Float
   longitude Float
   imageUrl String?
-
   edges1 Edge[] @relation("EdgeToNode1")
   edges2 Edge[] @relation("EdgeToNode2")
-  building Building[] 
+  buildingNodes BuildingNode[]
+
 
   @@map("node")
 }
@@ -44,8 +44,19 @@ model Edge {
 model Building {
   id Int @id @default(autoincrement())
   name String
+  buildingNodes BuildingNode[]
+
+  @@map("building")
+}
+
+model BuildingNode {
+  id Int @id @default(autoincrement())
+  buildingId Int
   nodeId Int
 
+  building Building @relation(fields: [buildingId], references: [id])
   node Node @relation(fields: [nodeId], references: [id])
-  @@map("building")
+
+
+  @@map("building_node")
 }
