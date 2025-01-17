@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../common/services/prisma.service";
 import { EdgeData } from "./type/edge-data.type";
-import { RouteData } from "./type/edge-data.type";
+import { RouteData } from "./type/route-data-type";
 
 @Injectable()
 export class EdgeRepository {
@@ -134,19 +134,8 @@ export class EdgeRepository {
         node1: true,
         node2: true,
       },
-      orderBy: {
-        id: "asc",
-      },
     });
 
-    return edges.sort((a, b) => {
-      const aIndex = path.findIndex(
-        (nodeId) => nodeId === a.nodeId1 || nodeId === a.nodeId2
-      );
-      const bIndex = path.findIndex(
-        (nodeId) => nodeId === b.nodeId1 || nodeId === b.nodeId2
-      );
-      return aIndex - bIndex;
-    });
+    return edges;
   }
 }

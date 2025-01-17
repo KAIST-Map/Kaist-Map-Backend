@@ -10,14 +10,15 @@ import * as cookieParser from "cookie-parser";
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // CORS 설정 구체화
+  // CORS 설정 - AWS ElasticBeanstalk/ECS 환경 고려
   app.enableCors({
-    origin: "*",
+    origin: process.env.CORS_ORIGIN || "*",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   });
   app.use(cookieParser());
 
+  // Global Pipes
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -27,12 +28,15 @@ async function bootstrap() {
     })
   );
 
+  // Exception Filter
   app.useGlobalFilters(new HttpExceptionFilter());
 
+  // Static Files - S3로 마이그레이션 고려
   app.useStaticAssets(join(__dirname, "..", "uploads"), {
     prefix: "/uploads/",
   });
 
+  // Swagger 설정
   const config = new DocumentBuilder()
     .setTitle("Eventory Server")
     .setDescription("Eventory API description")
@@ -44,16 +48,22 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("docs", app, document);
 
+  // Root 경로 리다이렉트
   const httpAdapter = app.getHttpAdapter().getInstance();
   httpAdapter.get("/", (req, res) => {
     res.redirect("/docs");
   });
 
-  // Cloud Run을 위한 포트 설정
+  // 헬스체크 엔드포인트 추가
+  httpAdapter.get("/health", (req, res) => {
+    res.send({ status: "ok" });
+  });
 
+  // AWS ECS/EKS를 위한 포트 설정
   const port = process.env.PORT || 3000;
   await app.listen(port, "0.0.0.0", () => {
     console.log(`Application is running on port ${port}`);
+    console.log(`Swagger documentation available at /docs`);
   });
 }
 bootstrap();

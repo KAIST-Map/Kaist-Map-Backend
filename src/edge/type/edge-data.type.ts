@@ -5,8 +5,3 @@ export type EdgeData = {
   isFreeOfRain: boolean;
   beamWeight: number;
 };
-
-export type RouteData = {
-  path: EdgeData[];
-  totalDistance: number;
-};
