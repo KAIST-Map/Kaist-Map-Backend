@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { EdgeDto } from "./edge.dto";
+import { RouteData } from "../type/route-data-type";
 
 export class RouteDto {
   @ApiProperty({
@@ -14,10 +15,10 @@ export class RouteDto {
   })
   totalDistance!: number;
 
-  static from(path: EdgeDto[], totalDistance: number): RouteDto {
+  static from(RouteData: RouteData): RouteDto {
     return {
-      path,
-      totalDistance,
+      path: EdgeDto.fromArray(RouteData.path),
+      totalDistance: RouteData.totalDistance,
     };
   }
 }

@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { EdgeRepository } from "./edge.repository";
 import { EdgeDto } from "./dto/edge.dto";
 import { EdgeListDto } from "./dto/edge.dto";
-import { RouteData } from "./type/edge-data.type";
+import { RouteData } from "./type/route-data-type";
 import { RouteDto } from "./dto/route.dto";
 @Injectable()
 export class EdgeService {
@@ -16,11 +16,11 @@ export class EdgeService {
     return EdgeDto.from(edge);
   }
 
-  async getRoutes(startNodeId: number, endNodeId: number): Promise<RouteData> {
+  async getRoutes(startNodeId: number, endNodeId: number): Promise<RouteDto> {
     const edges = await this.edgeRepository.getRoutesWithDistance(
       startNodeId,
       endNodeId
     );
-    return RouteDto.from(edges.path, edges.totalDistance);
+    return RouteDto.from(edges);
   }
 }
