@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsNotEmpty, IsNumber } from "class-validator";
-import { EdgeData } from "../type/node-data.type";
+import { NodeData } from "../type/node-data.type";
 
 export class NodeDto {
   @ApiProperty({
@@ -41,6 +40,24 @@ export class NodeDto {
       latitude: node.latitude,
       longitude: node.longitude,
       imageUrl: node.imageUrl,
+    };
+  }
+
+  static fromArray(nodes: NodeData[]): NodeDto[] {
+    return nodes.map((node) => NodeDto.from(node));
+  }
+}
+
+export class NodeListDto {
+  @ApiProperty({
+    description: "노드 목록",
+    type: [NodeDto],
+  })
+  nodes!: NodeDto[];
+
+  static from(nodes: NodeData[]): NodeListDto {
+    return {
+      nodes: NodeDto.fromArray(nodes),
     };
   }
 }

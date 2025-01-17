@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
-import { EdgeService } from "./node.service";
-import { EdgeController } from "./node.controller";
-import { EdgeRepository } from "./node.repository";
+import { NodeService } from "./node.service";
+import { NodeController } from "./node.controller";
+import { NodeRepository } from "./node.repository";
 
 @Module({
-  providers: [EdgeService, EdgeRepository],
-  controllers: [EdgeController],
+  providers: [NodeService, NodeRepository],
+  controllers: [NodeController],
 })
-export class EdgeModule {}
+export class NodeModule {}
