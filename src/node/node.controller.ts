@@ -1,9 +1,10 @@
-import { Controller, Get, Param, ParseIntPipe } from "@nestjs/common";
+import { Controller, Get, Param, ParseIntPipe, Body } from "@nestjs/common";
 import { NodeService } from "./node.service";
 import { NodeDto } from "./dto/node.dto";
 import { ApiOperation, ApiOkResponse } from "@nestjs/swagger";
 import { NodeListDto } from "./dto/node.dto";
 import { RouteDto } from "./dto/route.dto";
+import { RoutePayload } from "./payload/route.payload";
 @Controller("node")
 export class NodeController {
   constructor(private readonly nodeService: NodeService) {}
@@ -23,7 +24,7 @@ export class NodeController {
     return this.nodeService.getNodes();
   }
 
-  @Get("routes/:startNodeId/:endNodeId")
+  @Get("routes/point to point")
   @ApiOperation({ summary: "두 노드 사이의 경로 조회" })
   @ApiOkResponse({
     status: 200,
@@ -31,23 +32,8 @@ export class NodeController {
     type: RouteDto,
   })
   async getRoutesWithDistance(
-    @Param("startNodeId") startNodeId: number,
-    @Param("endNodeId") endNodeId: number
+    @Body() routePayload: RoutePayload
   ): Promise<RouteDto> {
-    return this.nodeService.getRoutesWithDistance(startNodeId, endNodeId);
-  }
-
-  @Get("routes/rain/:startNodeId/:endNodeId")
-  @ApiOperation({ summary: "두 노드 사이의 비맞지 않는 경로 조회" })
-  @ApiOkResponse({
-    status: 200,
-    description: "경로 조회 성공",
-    type: RouteDto,
-  })
-  async getRoutesWithoutRain(
-    @Param("startNodeId") startNodeId: number,
-    @Param("endNodeId") endNodeId: number
-  ): Promise<RouteDto> {
-    return this.nodeService.getRoutesWithoutRain(startNodeId, endNodeId);
+    return this.nodeService.getRoutesWithDistance(routePayload);
   }
 }

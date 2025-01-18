@@ -1,10 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, OnModuleInit } from "@nestjs/common";
 import { PrismaService } from "./prisma.service";
 import { EdgeData } from "src/edge/type/edge-data.type";
 import { NodeData } from "src/node/type/node-data.type";
 
 @Injectable()
-export class GraphService {
+export class GraphService implements OnModuleInit {
   private graphData: {
     edges: EdgeData[];
     nodes: NodeData[];
@@ -12,8 +12,13 @@ export class GraphService {
 
   constructor(private readonly prisma: PrismaService) {}
 
+  // NestJS 라이프사이클 훅을 통해 자동 초기화
+  async onModuleInit() {
+    await this.initializeGraph();
+  }
+
   async initializeGraph() {
-    if (!this.graphData) {
+    try {
       const [edges, nodes] = await Promise.all([
         this.prisma.edge.findMany({
           select: {
@@ -28,8 +33,13 @@ export class GraphService {
       ]);
 
       this.graphData = { edges, nodes };
+      return this.graphData;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to initialize graph data: ${error.message}`);
+      }
+      throw new Error("Failed to initialize graph data: Unknown error");
     }
-    return this.graphData;
   }
 
   getGraphData() {
@@ -40,6 +50,6 @@ export class GraphService {
   }
 
   async updateGraphData() {
-    await this.initializeGraph();
+    return await this.initializeGraph();
   }
 }

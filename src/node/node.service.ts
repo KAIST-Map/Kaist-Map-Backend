@@ -3,6 +3,7 @@ import { NodeDto } from "./dto/node.dto";
 import { NodeRepository } from "./node.repository";
 import { NodeListDto } from "./dto/node.dto";
 import { RouteDto } from "./dto/route.dto";
+import { RoutePayload } from "./payload/route.payload";
 @Injectable()
 export class NodeService {
   constructor(private readonly nodeRepository: NodeRepository) {}
@@ -20,17 +21,7 @@ export class NodeService {
     return NodeListDto.from(nodes);
   }
 
-  async getRoutesWithDistance(
-    startNodeId: number,
-    endNodeId: number
-  ): Promise<RouteDto> {
-    return this.nodeRepository.getRoutesWithDistance(startNodeId, endNodeId);
-  }
-
-  async getRoutesWithoutRain(
-    startNodeId: number,
-    endNodeId: number
-  ): Promise<RouteDto> {
-    return this.nodeRepository.getRoutesWithoutRain(startNodeId, endNodeId);
+  async getRoutesWithDistance(routePayload: RoutePayload): Promise<RouteDto> {
+    return this.nodeRepository.getRoutesWithDistance(routePayload);
   }
 }

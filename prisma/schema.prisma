@@ -45,7 +45,7 @@ model Edge {
 model Building {
   id Int @id @default(autoincrement())
   name String
-  categoryId Int
+
   imageUrl String
   importance Int
   latitude Float
@@ -53,17 +53,24 @@ model Building {
   alias String[]
 
   nodes Node[]
-  category Category @relation(fields: [categoryId], references: [id])
+  buildingCategories BuildingCategory[]
   @@map("building")
 }
-
+model BuildingCategory {
+  id Int @id @default(autoincrement())
+  categoryId Int
+  buildingId Int
+  category Category @relation(fields: [categoryId], references: [id])
+  building Building @relation(fields: [buildingId], references: [id])
+  @@map("building_category")
+}
 
 
 model Category {
   id Int @id @default(autoincrement())
   name String
  
-  buildings Building[]
+  buildingCategories BuildingCategory[]
   @@map("category")
 }
 

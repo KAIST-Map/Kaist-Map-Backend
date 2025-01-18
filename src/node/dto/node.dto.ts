@@ -27,13 +27,6 @@ export class NodeDto {
   longitude!: number;
 
   @ApiProperty({
-    description: "노드 이미지 URL",
-    nullable: true,
-    example: "https://example.com/image.jpg",
-  })
-  imageUrl?: string | null;
-
-  @ApiProperty({
     description: "노드 건물 ID",
     nullable: true,
     example: 1,
