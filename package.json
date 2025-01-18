@@ -30,6 +30,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.4.2",
     "@prisma/client": "^5.22.0",
+    "@types/kd-tree-javascript": "^1.0.3",
     "@types/lodash": "^4.17.9",
     "aws-sdk": "^2.1692.0",
     "bcryptjs": "^2.4.3",

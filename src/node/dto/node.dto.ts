@@ -33,13 +33,20 @@ export class NodeDto {
   })
   imageUrl?: string | null;
 
+  @ApiProperty({
+    description: "노드 건물 ID",
+    nullable: true,
+    example: 1,
+  })
+  buildingId?: number | null;
+
   static from(node: NodeData): NodeDto {
     return {
       id: node.id,
       name: node.name,
       latitude: node.latitude,
       longitude: node.longitude,
-      imageUrl: node.imageUrl,
+      buildingId: node.buildingId,
     };
   }
 

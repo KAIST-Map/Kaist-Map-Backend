@@ -18,10 +18,12 @@ model Node {
   name String
   latitude Float
   longitude Float
-  imageUrl String?
+  buildingId Int?
+  
   edges1 Edge[] @relation("EdgeToNode1")
   edges2 Edge[] @relation("EdgeToNode2")
-  buildingNodes BuildingNode[]
+  building Building? @relation(fields: [buildingId], references: [id])
+
 
 
   @@map("node")
@@ -34,8 +36,7 @@ model Edge {
   isFreeOfRain Boolean  @map("is_free_of_rain")
   distance Float
   beamWeight Float
-
-
+  
   node1 Node @relation("EdgeToNode1", fields: [nodeId1], references: [id])
   node2 Node @relation("EdgeToNode2", fields: [nodeId2], references: [id])
   @@map("edge")
@@ -44,19 +45,43 @@ model Edge {
 model Building {
   id Int @id @default(autoincrement())
   name String
-  buildingNodes BuildingNode[]
+  categoryId Int
+  imageUrl String
+  importance Int
+  latitude Float
+  longitude Float
+  alias String[]
 
+  nodes Node[]
+  category Category @relation(fields: [categoryId], references: [id])
   @@map("building")
 }
 
-model BuildingNode {
+
+
+model Category {
   id Int @id @default(autoincrement())
-  buildingId Int
-  nodeId Int
-
-  building Building @relation(fields: [buildingId], references: [id])
-  node Node @relation(fields: [nodeId], references: [id])
-
-
-  @@map("building_node")
+  name String
+ 
+  buildings Building[]
+  @@map("category")
 }
+
+model ReportedRoad {
+  id Int @id @default(autoincrement())
+  latitude1 Float
+  longitude1 Float
+  latitude2 Float
+  longitude2 Float
+  imageUrls String[]
+  description String? 
+  reportStatus      ReportStatus @default(PENDING) 
+  @@map("reported_road")
+}
+
+enum ReportStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+

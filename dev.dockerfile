@@ -17,7 +17,7 @@ RUN yarn build
 FROM node:20-alpine as runner
 ENV TZ=Asia/Seoul
 ENV PORT=3000
-ENV NODE_ENV=production
+ENV NODE_ENV=dev
 
 WORKDIR /usr/src/app
 
@@ -28,13 +28,14 @@ RUN apk add --no-cache openssl
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/package.json ./package.json
-COPY --from=builder /usr/src/app/.env ./.env
+COPY --from=builder /usr/src/app/.dev.env ./.dev.env  
+
 
 # 포트 노출
 EXPOSE 3000
 
 # 헬스체크를 위한 startup probe 설정
 HEALTHCHECK --interval=30s --timeout=3s \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
 
 CMD ["node", "dist/main.js"]

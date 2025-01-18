@@ -2,7 +2,6 @@ import { Controller, Get, Param } from "@nestjs/common";
 import { EdgeRepository } from "./edge.repository";
 import { EdgeDto } from "./dto/edge.dto";
 import { EdgeService } from "./edge.service";
-import { RouteDto } from "./dto/route.dto";
 import {
   ApiOperation,
   ApiResponse,
@@ -24,19 +23,5 @@ export class EdgeController {
   })
   async getEdge(@Param("edgeId") id: number): Promise<EdgeDto> {
     return this.edgeService.getEdge(id);
-  }
-
-  @Get("routes/:startNodeId/:endNodeId")
-  @ApiOperation({ summary: "두 노드 사이의 경로 조회" })
-  @ApiOkResponse({
-    status: 200,
-    description: "경로 조회 성공",
-    type: RouteDto,
-  })
-  async getRoutes(
-    @Param("startNodeId") startNodeId: number,
-    @Param("endNodeId") endNodeId: number
-  ): Promise<RouteDto> {
-    return this.edgeService.getRoutes(startNodeId, endNodeId);
   }
 }

@@ -1,13 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { EdgeDto } from "./edge.dto";
+import { NodeDto } from "./node.dto";
 import { RouteData } from "../type/route-data-type";
 
 export class RouteDto {
   @ApiProperty({
-    description: "경로상의 엣지들",
-    type: [EdgeDto],
+    description: "경로상의 노드들",
+    type: [NodeDto],
   })
-  path!: EdgeDto[];
+  path!: NodeDto[];
 
   @ApiProperty({
     description: "총 이동 거리",
@@ -17,7 +17,7 @@ export class RouteDto {
 
   static from(RouteData: RouteData): RouteDto {
     return {
-      path: EdgeDto.fromArray(RouteData.path),
+      path: NodeDto.fromArray(RouteData.path),
       totalDistance: RouteData.totalDistance,
     };
   }

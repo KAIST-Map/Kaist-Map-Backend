@@ -1071,6 +1071,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/kd-tree-javascript@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/@types/kd-tree-javascript/-/kd-tree-javascript-1.0.3.tgz"
+  integrity sha512-U9nzaLMsPmUbNcUqQdl7Q2eZ0xIt3Uar1pfqVnkwNPFi4iq/UwdNTF+rz18nR2pqQW3LvrB/xoZE0RLAAmx7iQ==
+
 "@types/lodash@^4.17.9":
   version "4.17.9"
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.17.9.tgz"
