@@ -24,7 +24,7 @@ export class BuildingDto {
     ],
     type: [String],
   })
-  imageUrl!: string[];
+  imageUrls!: string[];
 
   @ApiProperty({
     description: "건물 중요도",
@@ -65,7 +65,7 @@ export class BuildingDto {
     return {
       id: building.id,
       name: building.name,
-      imageUrl: building.imageUrl,
+      imageUrls: building.imageUrls,
       importance: building.importance,
       latitude: building.latitude,
       longitude: building.longitude,

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { NodeDto } from "./dto/node.dto";
 import { NodeRepository } from "./node.repository";
 import { NodeListDto } from "./dto/node.dto";
@@ -8,12 +8,22 @@ import { RouteBetweenBuildingsQuery } from "./query/route.query";
 import { RoutePointToBuildingQuery } from "./query/route.query";
 import { RouteBuildingToPointQuery } from "./query/route.query";
 import { CreateNodePayload } from "./payload/create-node.payload";
-
+import { ConfigService } from "@nestjs/config";
 @Injectable()
 export class NodeService {
-  constructor(private readonly nodeRepository: NodeRepository) {}
+  constructor(
+    private readonly nodeRepository: NodeRepository,
+    private readonly configService: ConfigService
+  ) {}
 
-  async createNode(nodePayload: CreateNodePayload): Promise<NodeDto> {
+  async createNode(
+    nodePayload: CreateNodePayload,
+    password: string
+  ): Promise<NodeDto> {
+    const envPassword = this.configService.get<string>("PASSWORD");
+    if (password !== envPassword) {
+      throw new UnauthorizedException("Invalid password");
+    }
     if (nodePayload.buildingId) {
       const building = await this.nodeRepository.getBuilding(
         nodePayload.buildingId

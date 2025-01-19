@@ -24,8 +24,11 @@ export class NodeController {
   @Post("nodes")
   @ApiOperation({ summary: "노드 생성" })
   @ApiOkResponse({ type: NodeDto })
-  async createNode(@Body() nodePayload: CreateNodePayload): Promise<NodeDto> {
-    return this.nodeService.createNode(nodePayload);
+  async createNode(
+    @Body() nodePayload: CreateNodePayload,
+    @Param() password: string
+  ): Promise<NodeDto> {
+    return this.nodeService.createNode(nodePayload, password);
   }
 
   @Get(":nodeId")

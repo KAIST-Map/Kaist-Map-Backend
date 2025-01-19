@@ -2,9 +2,46 @@ import { Injectable } from "@nestjs/common";
 import { BuildingData } from "./type/building-data.type";
 import { PrismaService } from "../common/services/prisma.service";
 import { CategoryData } from "src/category/type/category-data.type";
+import { CreateBuildingData } from "./type/create-building-data.type";
 @Injectable()
 export class BuildingRepository {
   constructor(private readonly prisma: PrismaService) {}
+
+  async createBuilding(
+    buildingData: CreateBuildingData
+  ): Promise<BuildingData> {
+    const building = await this.prisma.building.create({
+      data: {
+        name: buildingData.name,
+        latitude: buildingData.latitude,
+        longitude: buildingData.longitude,
+        imageUrls: buildingData.imageUrls,
+        importance: buildingData.importance,
+        alias: buildingData.alias,
+        buildingCategories: {
+          create: buildingData.categoryIds.map((categoryId) => ({
+            categoryId: categoryId,
+          })),
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        latitude: true,
+        longitude: true,
+        imageUrls: true,
+        importance: true,
+        alias: true,
+        buildingCategories: {
+          select: {
+            buildingId: true,
+            categoryId: true,
+          },
+        },
+      },
+    });
+    return building;
+  }
 
   async getBuildings(): Promise<BuildingData[]> {
     const buildings = await this.prisma.building.findMany({
@@ -13,7 +50,7 @@ export class BuildingRepository {
         name: true,
         latitude: true,
         longitude: true,
-        imageUrl: true,
+        imageUrls: true,
         importance: true,
         alias: true,
         buildingCategories: {
@@ -35,7 +72,7 @@ export class BuildingRepository {
         name: true,
         latitude: true,
         longitude: true,
-        imageUrl: true,
+        imageUrls: true,
         importance: true,
         buildingCategories: {
           select: {
@@ -57,7 +94,7 @@ export class BuildingRepository {
         name: true,
         latitude: true,
         longitude: true,
-        imageUrl: true,
+        imageUrls: true,
         importance: true,
         buildingCategories: {
           select: {
@@ -91,7 +128,7 @@ export class BuildingRepository {
         name: true,
         latitude: true,
         longitude: true,
-        imageUrl: true,
+        imageUrls: true,
         importance: true,
         buildingCategories: {
           select: { buildingId: true, categoryId: true },
