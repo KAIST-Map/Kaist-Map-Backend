@@ -27,11 +27,11 @@ export class NodeDto {
   longitude!: number;
 
   @ApiProperty({
-    description: "노드 이미지 URL",
+    description: "노드 건물 ID",
     nullable: true,
-    example: "https://example.com/image.jpg",
+    example: 1,
   })
-  imageUrl?: string | null;
+  buildingId?: number | null;
 
   static from(node: NodeData): NodeDto {
     return {
@@ -39,7 +39,7 @@ export class NodeDto {
       name: node.name,
       latitude: node.latitude,
       longitude: node.longitude,
-      imageUrl: node.imageUrl,
+      buildingId: node.buildingId,
     };
   }
 
