@@ -19,7 +19,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:save:dev": "dotenv -e .dev.env -- yarn prisma migrate dev",
     "script:dev": "dotenv -e .dev.env ts-node",
-    "deploy:dev": "NODE_ENV=dev node dist/src/main.js"
+    "deploy:dev": "NODE_ENV=dev node dist/src/main.js",
+    "studio:dev": "cross-env NODE_ENV=dev dotenv -e .dev.env -- npx prisma studio"
   },
   "dependencies": {
     "@datastructures-js/priority-queue": "^6.3.2",
