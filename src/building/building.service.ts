@@ -31,4 +31,9 @@ export class BuildingService {
 
     return BuildingListDto.from(buildings);
   }
+
+  async getBuildingsByName(name: string): Promise<BuildingListDto> {
+    const buildings = await this.buildingRepository.getBuildingsByName(name);
+    return BuildingListDto.from(buildings);
+  }
 }

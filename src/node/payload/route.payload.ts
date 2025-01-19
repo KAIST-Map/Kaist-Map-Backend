@@ -1,9 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsNumber, IsBoolean } from "class-validator";
+import { Transform } from "class-transformer";
+import { Type } from "class-transformer";
 
-export class RouteBetweenPointsPayload {
+export class RouteBetweenPointsQuery {
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   @ApiProperty({
     description: "시작 노드 위도",
     type: Number,
@@ -12,6 +15,7 @@ export class RouteBetweenPointsPayload {
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   @ApiProperty({
     description: "시작 노드 경도",
     type: Number,
@@ -20,6 +24,7 @@ export class RouteBetweenPointsPayload {
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   @ApiProperty({
     description: "도착 노드 위도",
     type: Number,
@@ -28,6 +33,7 @@ export class RouteBetweenPointsPayload {
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   @ApiProperty({
     description: "도착 노드 경도",
     type: Number,
@@ -35,6 +41,7 @@ export class RouteBetweenPointsPayload {
   endLongitude!: number;
 
   @IsBoolean()
+  @Transform(({ value }) => value === "true")
   @ApiProperty({
     description: "비맞지 않는 경로 여부",
     type: Boolean,
@@ -42,6 +49,7 @@ export class RouteBetweenPointsPayload {
   wantFreeOfRain!: boolean;
 
   @IsBoolean()
+  @Transform(({ value }) => value === "true")
   @ApiProperty({
     description: "빔 타는지 여부",
     type: Boolean,
@@ -49,9 +57,10 @@ export class RouteBetweenPointsPayload {
   wantBeam!: boolean;
 }
 
-export class RouteBetweenBuildingsPayload {
+export class RouteBetweenBuildingsQuery {
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   @ApiProperty({
     description: "시작 건물 아이디",
     type: Number,
@@ -60,6 +69,7 @@ export class RouteBetweenBuildingsPayload {
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   @ApiProperty({
     description: "도착 건물 아이디",
     type: Number,
@@ -67,6 +77,7 @@ export class RouteBetweenBuildingsPayload {
   endBuildingId!: number;
 
   @IsBoolean()
+  @Transform(({ value }) => value === "true")
   @ApiProperty({
     description: "비맞지 않는 경로 여부",
     type: Boolean,
@@ -74,6 +85,7 @@ export class RouteBetweenBuildingsPayload {
   wantFreeOfRain!: boolean;
 
   @IsBoolean()
+  @Transform(({ value }) => value === "true")
   @ApiProperty({
     description: "빔 타는지 여부",
     type: Boolean,
@@ -81,9 +93,10 @@ export class RouteBetweenBuildingsPayload {
   wantBeam!: boolean;
 }
 
-export class RoutePointToBuildingPayload {
+export class RoutePointToBuildingQuery {
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   @ApiProperty({
     description: "시작 노드 위도",
     type: Number,
@@ -92,6 +105,7 @@ export class RoutePointToBuildingPayload {
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   @ApiProperty({
     description: "시작 노드 경도",
     type: Number,
@@ -100,6 +114,7 @@ export class RoutePointToBuildingPayload {
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   @ApiProperty({
     description: "도착 건물 아이디",
     type: Number,
@@ -107,6 +122,7 @@ export class RoutePointToBuildingPayload {
   endBuildingId!: number;
 
   @IsBoolean()
+  @Transform(({ value }) => value === "true")
   @ApiProperty({
     description: "비맞지 않는 경로 여부",
     type: Boolean,
@@ -114,15 +130,18 @@ export class RoutePointToBuildingPayload {
   wantFreeOfRain!: boolean;
 
   @IsBoolean()
+  @Transform(({ value }) => value === "true")
   @ApiProperty({
     description: "빔 타는지 여부",
     type: Boolean,
   })
   wantBeam!: boolean;
 }
-export class RouteBuildingToPointPayload {
+
+export class RouteBuildingToPointQuery {
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   @ApiProperty({
     description: "시작 건물 아이디",
     type: Number,
@@ -131,6 +150,7 @@ export class RouteBuildingToPointPayload {
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   @ApiProperty({
     description: "도착 노드 위도",
     type: Number,
@@ -139,6 +159,7 @@ export class RouteBuildingToPointPayload {
 
   @IsNotEmpty()
   @IsNumber()
+  @Type(() => Number)
   @ApiProperty({
     description: "도착 노드 경도",
     type: Number,
@@ -146,6 +167,7 @@ export class RouteBuildingToPointPayload {
   endLongitude!: number;
 
   @IsBoolean()
+  @Transform(({ value }) => value === "true")
   @ApiProperty({
     description: "비맞지 않는 경로 여부",
     type: Boolean,
@@ -153,6 +175,7 @@ export class RouteBuildingToPointPayload {
   wantFreeOfRain!: boolean;
 
   @IsBoolean()
+  @Transform(({ value }) => value === "true")
   @ApiProperty({
     description: "빔 타는지 여부",
     type: Boolean,
