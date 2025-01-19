@@ -3,13 +3,13 @@ import { NodeData } from "./type/node-data.type";
 import { PrismaService } from "../common/services/prisma.service";
 import { RouteData } from "./type/route-data-type";
 import { GraphService } from "../common/services/graph.service";
-import { RouteBetweenPointsPayload } from "./payload/route.payload";
-import { RouteBetweenBuildingsPayload } from "./payload/route.payload";
+import { RouteBetweenPointsQuery } from "./payload/route.payload";
+import { RouteBetweenBuildingsQuery } from "./payload/route.payload";
 import { EdgeData } from "../edge/type/edge-data.type";
 import { kdTree } from "kd-tree-javascript"; // 실제로는 직접 구현하거나 다른 라이브러리를 사용할 수 있습니다
 import { MinPriorityQueue } from "@datastructures-js/priority-queue";
-import { RoutePointToBuildingPayload } from "./payload/route.payload";
-import { RouteBuildingToPointPayload } from "./payload/route.payload";
+import { RoutePointToBuildingQuery } from "./payload/route.payload";
+import { RouteBuildingToPointQuery } from "./payload/route.payload";
 @Injectable()
 export class NodeRepository {
   private kdTree: kdTree<NodeData> | null = null;
@@ -94,7 +94,7 @@ export class NodeRepository {
   }
 
   async getRoutesBetweenPoints(
-    routePayload: RouteBetweenPointsPayload
+    routePayload: RouteBetweenPointsQuery
   ): Promise<RouteData> {
     const edges = await this.getWeightedDistance(
       routePayload.wantBeam,
@@ -210,7 +210,7 @@ export class NodeRepository {
   }
 
   async getRoutesBetweenBuildings(
-    routePayload: RouteBetweenBuildingsPayload
+    routePayload: RouteBetweenBuildingsQuery
   ): Promise<RouteData> {
     const edges = await this.getWeightedDistance(
       routePayload.wantBeam,
@@ -342,7 +342,7 @@ export class NodeRepository {
   }
 
   async getRoutesPointToBuilding(
-    routePayload: RoutePointToBuildingPayload
+    routePayload: RoutePointToBuildingQuery
   ): Promise<RouteData> {
     const edges = await this.getWeightedDistance(
       routePayload.wantBeam,
@@ -471,7 +471,7 @@ export class NodeRepository {
   }
 
   async getRoutesBuildingToPoint(
-    routePayload: RouteBuildingToPointPayload
+    routePayload: RouteBuildingToPointQuery
   ): Promise<RouteData> {
     const edges = await this.getWeightedDistance(
       routePayload.wantBeam,

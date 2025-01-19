@@ -3,10 +3,10 @@ import { NodeDto } from "./dto/node.dto";
 import { NodeRepository } from "./node.repository";
 import { NodeListDto } from "./dto/node.dto";
 import { RouteDto } from "./dto/route.dto";
-import { RouteBetweenPointsPayload } from "./payload/route.payload";
-import { RouteBetweenBuildingsPayload } from "./payload/route.payload";
-import { RoutePointToBuildingPayload } from "./payload/route.payload";
-import { RouteBuildingToPointPayload } from "./payload/route.payload";
+import { RouteBetweenPointsQuery } from "./payload/route.payload";
+import { RouteBetweenBuildingsQuery } from "./payload/route.payload";
+import { RoutePointToBuildingQuery } from "./payload/route.payload";
+import { RouteBuildingToPointQuery } from "./payload/route.payload";
 
 @Injectable()
 export class NodeService {
@@ -26,26 +26,26 @@ export class NodeService {
   }
 
   async getRoutesBetweenPoints(
-    routePayload: RouteBetweenPointsPayload
+    routeQuery: RouteBetweenPointsQuery
   ): Promise<RouteDto> {
-    return this.nodeRepository.getRoutesBetweenPoints(routePayload);
+    return this.nodeRepository.getRoutesBetweenPoints(routeQuery);
   }
 
   async getRoutesBetweenBuildings(
-    routePayload: RouteBetweenBuildingsPayload
+    routeQuery: RouteBetweenBuildingsQuery
   ): Promise<RouteDto> {
-    return this.nodeRepository.getRoutesBetweenBuildings(routePayload);
+    return this.nodeRepository.getRoutesBetweenBuildings(routeQuery);
   }
 
   async getRoutesPointToBuilding(
-    routePayload: RoutePointToBuildingPayload
+    routeQuery: RoutePointToBuildingQuery
   ): Promise<RouteDto> {
-    return this.nodeRepository.getRoutesPointToBuilding(routePayload);
+    return this.nodeRepository.getRoutesPointToBuilding(routeQuery);
   }
 
   async getRoutesBuildingToPoint(
-    routePayload: RouteBuildingToPointPayload
+    routeQuery: RouteBuildingToPointQuery
   ): Promise<RouteDto> {
-    return this.nodeRepository.getRoutesBuildingToPoint(routePayload);
+    return this.nodeRepository.getRoutesBuildingToPoint(routeQuery);
   }
 }

@@ -15,8 +15,13 @@ export class BuildingRepository {
         longitude: true,
         imageUrl: true,
         importance: true,
-        categoryId: true,
         alias: true,
+        buildingCategories: {
+          select: {
+            buildingId: true,
+            categoryId: true,
+          },
+        },
       },
     });
     return buildings;
@@ -32,7 +37,12 @@ export class BuildingRepository {
         longitude: true,
         imageUrl: true,
         importance: true,
-        categoryId: true,
+        buildingCategories: {
+          select: {
+            buildingId: true,
+            categoryId: true,
+          },
+        },
         alias: true,
       },
     });
@@ -41,7 +51,7 @@ export class BuildingRepository {
 
   async getBuildingsByCategory(categoryId: number): Promise<BuildingData[]> {
     const buildings = await this.prisma.building.findMany({
-      where: { categoryId: categoryId },
+      where: { buildingCategories: { some: { categoryId: categoryId } } },
       select: {
         id: true,
         name: true,
@@ -49,7 +59,12 @@ export class BuildingRepository {
         longitude: true,
         imageUrl: true,
         importance: true,
-        categoryId: true,
+        buildingCategories: {
+          select: {
+            buildingId: true,
+            categoryId: true,
+          },
+        },
         alias: true,
       },
     });
@@ -60,5 +75,30 @@ export class BuildingRepository {
       where: { id: categoryId },
     });
     return category;
+  }
+
+  async getBuildingsByName(inputName: string): Promise<BuildingData[]> {
+    const name = inputName.toLowerCase();
+    return await this.prisma.building.findMany({
+      where: {
+        OR: [
+          { name: { contains: name, mode: "insensitive" } },
+          { alias: { hasSome: [`%${name}%`] } },
+        ],
+      },
+      select: {
+        id: true,
+        name: true,
+        latitude: true,
+        longitude: true,
+        imageUrl: true,
+        importance: true,
+        buildingCategories: {
+          select: { buildingId: true, categoryId: true },
+        },
+        alias: true,
+      },
+      orderBy: [{ importance: "desc" }],
+    });
   }
 }

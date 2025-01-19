@@ -1,13 +1,20 @@
-import { Controller, Get, Param, ParseIntPipe, Body } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Body,
+  Query,
+} from "@nestjs/common";
 import { NodeService } from "./node.service";
 import { NodeDto } from "./dto/node.dto";
 import { ApiOperation, ApiOkResponse } from "@nestjs/swagger";
 import { NodeListDto } from "./dto/node.dto";
 import { RouteDto } from "./dto/route.dto";
-import { RouteBetweenPointsPayload } from "./payload/route.payload";
-import { RouteBetweenBuildingsPayload } from "./payload/route.payload";
-import { RoutePointToBuildingPayload } from "./payload/route.payload";
-import { RouteBuildingToPointPayload } from "./payload/route.payload";
+import { RouteBetweenPointsQuery } from "./payload/route.payload";
+import { RouteBetweenBuildingsQuery } from "./payload/route.payload";
+import { RoutePointToBuildingQuery } from "./payload/route.payload";
+import { RouteBuildingToPointQuery } from "./payload/route.payload";
 @Controller("node")
 export class NodeController {
   constructor(private readonly nodeService: NodeService) {}
@@ -35,9 +42,9 @@ export class NodeController {
     type: RouteDto,
   })
   async getRoutesBetweenPoints(
-    @Body() routePayload: RouteBetweenPointsPayload
+    @Query() routeQuery: RouteBetweenPointsQuery
   ): Promise<RouteDto> {
-    return this.nodeService.getRoutesBetweenPoints(routePayload);
+    return this.nodeService.getRoutesBetweenPoints(routeQuery);
   }
 
   @Get("routes/building to building")
@@ -48,9 +55,9 @@ export class NodeController {
     type: RouteDto,
   })
   async getRoutesBetweenBuildings(
-    @Body() routePayload: RouteBetweenBuildingsPayload
+    @Query() routeQuery: RouteBetweenBuildingsQuery
   ): Promise<RouteDto> {
-    return this.nodeService.getRoutesBetweenBuildings(routePayload);
+    return this.nodeService.getRoutesBetweenBuildings(routeQuery);
   }
 
   @Get("routes/point to building")
@@ -61,9 +68,9 @@ export class NodeController {
     type: RouteDto,
   })
   async getRoutesPointToBuilding(
-    @Body() routePayload: RoutePointToBuildingPayload
+    @Query() routeQuery: RoutePointToBuildingQuery
   ): Promise<RouteDto> {
-    return this.nodeService.getRoutesPointToBuilding(routePayload);
+    return this.nodeService.getRoutesPointToBuilding(routeQuery);
   }
 
   @Get("routes/building to point")
@@ -74,8 +81,8 @@ export class NodeController {
     type: RouteDto,
   })
   async getRoutesBuildingToPoint(
-    @Body() routePayload: RouteBuildingToPointPayload
+    @Query() routeQuery: RouteBuildingToPointQuery
   ): Promise<RouteDto> {
-    return this.nodeService.getRoutesBuildingToPoint(routePayload);
+    return this.nodeService.getRoutesBuildingToPoint(routeQuery);
   }
 }

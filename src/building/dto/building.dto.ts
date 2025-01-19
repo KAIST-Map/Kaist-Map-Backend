@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { BuildingData } from "../type/building-data.type";
-
+import { CategoryDto } from "src/category/dto/category.dto";
 export class BuildingDto {
   @ApiProperty({
     description: "건물 ID",
@@ -17,11 +17,14 @@ export class BuildingDto {
   name!: string;
 
   @ApiProperty({
-    description: "건물 이미지 URL",
-    example: "https://example.com/image.jpg",
-    type: String,
+    description: "건물 이미지 URL들",
+    example: [
+      "https://example.com/image.jpg",
+      "https://example.com/image2.jpg",
+    ],
+    type: [String],
   })
-  imageUrl!: string;
+  imageUrl!: string[];
 
   @ApiProperty({
     description: "건물 중요도",
@@ -45,11 +48,11 @@ export class BuildingDto {
   longitude!: number;
 
   @ApiProperty({
-    description: "건물 카테고리 ID",
-    example: 1,
-    type: Number,
+    description: "건물 카테고리id들",
+    example: [1, 2, 3],
+    type: [Number],
   })
-  categoryId!: number;
+  categoryIds!: number[];
 
   @ApiProperty({
     description: "건물 별칭",
@@ -66,7 +69,9 @@ export class BuildingDto {
       importance: building.importance,
       latitude: building.latitude,
       longitude: building.longitude,
-      categoryId: building.categoryId,
+      categoryIds: building.buildingCategories.map(
+        (category) => category.categoryId
+      ),
       alias: building.alias,
     };
   }

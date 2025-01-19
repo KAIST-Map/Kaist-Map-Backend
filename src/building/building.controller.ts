@@ -33,4 +33,14 @@ export class BuildingController {
   ): Promise<BuildingListDto> {
     return this.buildingService.getBuildingsByCategory(categoryId);
   }
+
+  @Get(":name")
+  @ApiResponse({
+    type: BuildingListDto,
+  })
+  async getBuildingsByName(
+    @Param("name") name: string
+  ): Promise<BuildingListDto> {
+    return this.buildingService.getBuildingsByName(name);
+  }
 }
