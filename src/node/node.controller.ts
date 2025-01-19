@@ -5,19 +5,28 @@ import {
   ParseIntPipe,
   Body,
   Query,
+  Post,
 } from "@nestjs/common";
 import { NodeService } from "./node.service";
 import { NodeDto } from "./dto/node.dto";
 import { ApiOperation, ApiOkResponse } from "@nestjs/swagger";
 import { NodeListDto } from "./dto/node.dto";
 import { RouteDto } from "./dto/route.dto";
-import { RouteBetweenPointsQuery } from "./payload/route.payload";
-import { RouteBetweenBuildingsQuery } from "./payload/route.payload";
-import { RoutePointToBuildingQuery } from "./payload/route.payload";
-import { RouteBuildingToPointQuery } from "./payload/route.payload";
+import { RouteBetweenPointsQuery } from "./query/route.query";
+import { RouteBetweenBuildingsQuery } from "./query/route.query";
+import { RoutePointToBuildingQuery } from "./query/route.query";
+import { RouteBuildingToPointQuery } from "./query/route.query";
+import { CreateNodePayload } from "./payload/create-node.payload";
 @Controller("node")
 export class NodeController {
   constructor(private readonly nodeService: NodeService) {}
+
+  @Post("nodes")
+  @ApiOperation({ summary: "노드 생성" })
+  @ApiOkResponse({ type: NodeDto })
+  async createNode(@Body() nodePayload: CreateNodePayload): Promise<NodeDto> {
+    return this.nodeService.createNode(nodePayload);
+  }
 
   @Get(":nodeId")
   @ApiOperation({ summary: "노드 정보 조회" })

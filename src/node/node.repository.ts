@@ -3,13 +3,16 @@ import { NodeData } from "./type/node-data.type";
 import { PrismaService } from "../common/services/prisma.service";
 import { RouteData } from "./type/route-data-type";
 import { GraphService } from "../common/services/graph.service";
-import { RouteBetweenPointsQuery } from "./payload/route.payload";
-import { RouteBetweenBuildingsQuery } from "./payload/route.payload";
+import { RouteBetweenPointsQuery } from "./query/route.query";
+import { RouteBetweenBuildingsQuery } from "./query/route.query";
 import { EdgeData } from "../edge/type/edge-data.type";
 import { kdTree } from "kd-tree-javascript"; // 실제로는 직접 구현하거나 다른 라이브러리를 사용할 수 있습니다
 import { MinPriorityQueue } from "@datastructures-js/priority-queue";
-import { RoutePointToBuildingQuery } from "./payload/route.payload";
-import { RouteBuildingToPointQuery } from "./payload/route.payload";
+import { RoutePointToBuildingQuery } from "./query/route.query";
+import { RouteBuildingToPointQuery } from "./query/route.query";
+import { CreateNodePayload } from "./payload/create-node.payload";
+import { CreateNodeData } from "./type/create-node-data.type";
+import { BuildingData } from "../building/type/building-data.type";
 @Injectable()
 export class NodeRepository {
   private kdTree: kdTree<NodeData> | null = null;
@@ -71,6 +74,25 @@ export class NodeRepository {
     // nearest 메서드는 [노드, 거리] 쌍의 배열을 반환
     const nearest = this.kdTree!.nearest(searchPoint, 1);
     return nearest[0][0]; // 가장 가까운 노드 반환
+  }
+
+  async createNode(nodeData: CreateNodeData): Promise<NodeData> {
+    const node = await this.prisma.node.create({
+      data: {
+        name: nodeData.name,
+        latitude: nodeData.latitude,
+        longitude: nodeData.longitude,
+        buildingId: nodeData.buildingId,
+      },
+      select: {
+        id: true,
+        name: true,
+        latitude: true,
+        longitude: true,
+        buildingId: true,
+      },
+    });
+    return node;
   }
 
   async getNode(nodeId: number): Promise<NodeData | null> {
@@ -637,5 +659,23 @@ export class NodeRepository {
     }
 
     return edges;
+  }
+  async getBuilding(buildingId: number): Promise<BuildingData | null> {
+    const building = await this.prisma.building.findUnique({
+      where: {
+        id: buildingId,
+      },
+      select: {
+        id: true,
+        name: true,
+        latitude: true,
+        longitude: true,
+        imageUrl: true,
+        importance: true,
+        alias: true,
+        buildingCategories: true,
+      },
+    });
+    return building;
   }
 }
