@@ -670,7 +670,7 @@ export class NodeRepository {
         name: true,
         latitude: true,
         longitude: true,
-        imageUrl: true,
+        imageUrls: true,
         importance: true,
         alias: true,
         buildingCategories: true,
