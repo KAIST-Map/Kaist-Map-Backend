@@ -34,7 +34,7 @@ export class NodeController {
     return this.nodeService.getNodes();
   }
 
-  @Get("routes/point to point")
+  @Get("routes/point-to-point")
   @ApiOperation({ summary: "두 포인트 사이의 경로 조회" })
   @ApiOkResponse({
     status: 200,
@@ -47,7 +47,7 @@ export class NodeController {
     return this.nodeService.getRoutesBetweenPoints(routeQuery);
   }
 
-  @Get("routes/building to building")
+  @Get("routes/building-to-building")
   @ApiOperation({ summary: "두 건물 사이의 경로 조회" })
   @ApiOkResponse({
     status: 200,
@@ -60,7 +60,7 @@ export class NodeController {
     return this.nodeService.getRoutesBetweenBuildings(routeQuery);
   }
 
-  @Get("routes/point to building")
+  @Get("routes/point-to-building")
   @ApiOperation({ summary: "포인트와 건물 사이의 경로 조회" })
   @ApiOkResponse({
     status: 200,
@@ -73,7 +73,7 @@ export class NodeController {
     return this.nodeService.getRoutesPointToBuilding(routeQuery);
   }
 
-  @Get("routes/building to point")
+  @Get("routes/building-to-point")
   @ApiOperation({ summary: "건물과 포인트 사이의 경로 조회" })
   @ApiOkResponse({
     status: 200,
