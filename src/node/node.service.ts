@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NodeRepository } from "./node.repository";
-import { RoutingService } from "./routind.service";
+import { RoutingService } from "./routing.service";
 import { NodeDto, NodeListDto } from "./dto/node.dto";
 import { RouteDto } from "./dto/route.dto";
 import { CreateNodePayload } from "./payload/create-node.payload";
