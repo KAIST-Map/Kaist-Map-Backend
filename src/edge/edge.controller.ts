@@ -3,6 +3,7 @@ import { EdgeRepository } from "./edge.repository";
 import { EdgeDto } from "./dto/edge.dto";
 import { EdgeService } from "./edge.service";
 import { EdgeListDto } from "./dto/edge.dto";
+import { CreateAllEdgesPayload } from "./payload/create-all-edges.payload";
 import {
   ApiOperation,
   ApiResponse,
@@ -16,7 +17,7 @@ import { CreateEdgePayload } from "./payload/create-edge.payload";
 export class EdgeController {
   constructor(private readonly edgeService: EdgeService) {}
 
-  @Post("edge/:password")
+  @Post(":password")
   @ApiOperation({ summary: "엣지 생성" })
   @ApiOkResponse({
     status: 200,
@@ -35,7 +36,7 @@ export class EdgeController {
   @ApiOkResponse({
     status: 200,
     description: "모든 엣지 조회 성공",
-    type: EdgeDto,
+    type: EdgeListDto,
   })
   async getAllEdges(): Promise<EdgeListDto> {
     return this.edgeService.getAllEdges();
@@ -50,5 +51,15 @@ export class EdgeController {
   })
   async getEdge(@Param("edgeId") id: number): Promise<EdgeDto> {
     return this.edgeService.getEdge(id);
+  }
+
+  @Post("edges/all/:password")
+  @ApiOperation({ summary: "모든 엣지 업데이트 하거나 생성" })
+  @ApiOkResponse({ type: EdgeListDto })
+  async updateAllEdges(
+    @Body() edgePayload: CreateAllEdgesPayload,
+    @Param("password") password: string
+  ): Promise<EdgeListDto> {
+    return this.edgeService.createAllEdges(edgePayload, password);
   }
 }

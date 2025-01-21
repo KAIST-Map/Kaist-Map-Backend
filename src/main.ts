@@ -22,8 +22,6 @@ async function bootstrap() {
   });
   app.use(cookieParser());
 
-  app.use(json({ limit: "50mb" })); // 필요한 크기에 따라 조절 가능
-
   // Global Pipes
   app.useGlobalPipes(
     new ValidationPipe({
@@ -33,6 +31,7 @@ async function bootstrap() {
       stopAtFirstError: true,
     })
   );
+  app.use(json({ limit: "50mb" })); // 필요한 크기에 따라 조절 가능
 
   // Exception Filter
   app.useGlobalFilters(new HttpExceptionFilter());

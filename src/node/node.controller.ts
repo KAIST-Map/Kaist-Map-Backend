@@ -25,7 +25,7 @@ import { ApiTags } from "@nestjs/swagger";
 export class NodeController {
   constructor(private readonly nodeService: NodeService) {}
 
-  @Post("nodes/:password")
+  @Post("/:password")
   @ApiOperation({ summary: "노드 생성" })
   @ApiOkResponse({ type: NodeDto })
   async createNode(
@@ -35,7 +35,7 @@ export class NodeController {
     return this.nodeService.createNode(nodePayload, password);
   }
 
-  @Get("all")
+  @Get("nodes/all")
   @ApiOperation({ summary: "노드 정보 조회" })
   @ApiOkResponse({ type: NodeListDto })
   async getNodes(): Promise<NodeListDto> {

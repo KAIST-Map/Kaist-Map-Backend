@@ -22,6 +22,7 @@ export class GraphService implements OnModuleInit {
       const [edges, nodes] = await Promise.all([
         this.prisma.edge.findMany({
           select: {
+            id: true,
             nodeId1: true,
             nodeId2: true,
             distance: true,

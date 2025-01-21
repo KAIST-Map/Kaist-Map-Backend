@@ -31,6 +31,9 @@ export class NodeRepository {
   private async initializeKDTree() {
     try {
       const graphData = await this.graphService.initializeGraph();
+      if (!graphData) {
+        throw new Error("Graph data is null");
+      }
       const nodes = graphData.nodes;
 
       const distanceFunction = (a: NodeData, b: NodeData) => {

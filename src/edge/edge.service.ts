@@ -8,6 +8,7 @@ import { ConfigService } from "@nestjs/config";
 import { UnauthorizedException } from "@nestjs/common";
 import { ReportStatus } from "@prisma/client";
 import { NodeData } from "../node/type/node-data.type";
+import { CreateAllEdgesPayload } from "./payload/create-all-edges.payload";
 @Injectable()
 export class EdgeService {
   constructor(
@@ -55,6 +56,35 @@ export class EdgeService {
     return EdgeDto.from(edge);
   }
 
+  async createAllEdges(
+    edgePayload: CreateAllEdgesPayload,
+    password: string
+  ): Promise<EdgeListDto> {
+    this.validatePassword(password);
+
+    const lastEdgeId = await this.edgeRepository.getLastEdgeId();
+
+    for (const edge of edgePayload.edges) {
+      const edgeData = {
+        id: edge.id,
+        nodeId1: edge.nodeId1,
+        nodeId2: edge.nodeId2,
+        isFreeOfRain: edge.isFreeOfRain,
+        distance: edge.distance,
+        beamWeight: edge.beamWeight,
+      };
+
+      if (edge.id > lastEdgeId) {
+        await this.edgeRepository.createEdge(edgeData);
+      } else {
+        await this.edgeRepository.updateEdge(edgeData);
+      }
+    }
+
+    const updatedEdges = await this.edgeRepository.getAllEdges();
+    return EdgeListDto.from(updatedEdges);
+  }
+
   private async calculateDistance(
     node1: NodeData,
     node2: NodeData
@@ -81,5 +111,12 @@ export class EdgeService {
 
   private toRadian(degree: number): number {
     return ((degree * Math.PI) / 180) * 1000;
+  }
+
+  private validatePassword(password: string) {
+    const envPassword = this.configService.get<string>("PASSWORD");
+    if (password !== envPassword) {
+      throw new UnauthorizedException("Invalid password");
+    }
   }
 }

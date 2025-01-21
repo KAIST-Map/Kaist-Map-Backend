@@ -4,6 +4,7 @@ import { EdgeData } from "./type/edge-data.type";
 import { NodeData } from "../node/type/node-data.type";
 import { CreateEdgeData } from "./type/create-edge-data.type";
 import { ReportStatus } from "@prisma/client";
+import { UpdateEdgeData } from "./type/update-edge-data.type";
 @Injectable()
 export class EdgeRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -47,5 +48,25 @@ export class EdgeRepository {
     });
 
     return edge;
+  }
+
+  async getLastEdgeId(): Promise<number> {
+    const edge = await this.prisma.edge.findFirst({
+      orderBy: { id: "desc" },
+    });
+    return edge?.id ?? 0;
+  }
+
+  async updateEdge(edgeData: UpdateEdgeData): Promise<EdgeData> {
+    return await this.prisma.edge.update({
+      where: { id: edgeData.id },
+      data: {
+        nodeId1: edgeData.nodeId1,
+        nodeId2: edgeData.nodeId2,
+        isFreeOfRain: edgeData.isFreeOfRain,
+        distance: edgeData.distance,
+        beamWeight: edgeData.beamWeight,
+      },
+    });
   }
 }
