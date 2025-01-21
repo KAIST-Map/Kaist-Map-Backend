@@ -22,6 +22,11 @@ export class EdgeRepository {
     return node;
   }
 
+  async getAllEdges(): Promise<EdgeData[]> {
+    const edges = await this.prisma.edge.findMany();
+    return edges;
+  }
+
   async createEdge(edgeData: CreateEdgeData): Promise<EdgeData> {
     const edge = await this.prisma.edge.create({
       data: {

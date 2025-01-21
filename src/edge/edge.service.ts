@@ -23,6 +23,11 @@ export class EdgeService {
     return EdgeDto.from(edge);
   }
 
+  async getAllEdges(): Promise<EdgeListDto> {
+    const edges = await this.edgeRepository.getAllEdges();
+    return EdgeListDto.from(edges);
+  }
+
   async createEdge(
     edgePayload: CreateEdgePayload,
     password: string
