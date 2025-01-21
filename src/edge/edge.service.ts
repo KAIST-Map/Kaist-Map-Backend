@@ -59,7 +59,7 @@ export class EdgeService {
     node1: NodeData,
     node2: NodeData
   ): Promise<number> {
-    const R = 6371; // 지구의 반지름 (킬로미터)
+    const R = 6371;
 
     const lat1 = this.toRadian(node1.latitude);
     const lon1 = this.toRadian(node1.longitude);

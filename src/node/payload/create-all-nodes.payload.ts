@@ -1,5 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsString, ValidateNested, IsArray } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import {
+  IsNumber,
+  IsString,
+  ValidateNested,
+  IsArray,
+  IsOptional,
+} from "class-validator";
 import { Type } from "class-transformer";
 
 class AllNodePayload {
@@ -31,13 +37,15 @@ class AllNodePayload {
   longitude!: number;
 
   @IsNumber()
+  @IsOptional()
   @Type(() => Number)
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: "건물 아이디",
     example: 1,
     type: Number,
+    nullable: true,
   })
-  buildingId!: number;
+  buildingId?: number | null;
 
   @IsString()
   @ApiProperty({

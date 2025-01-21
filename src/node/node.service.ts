@@ -115,7 +115,7 @@ export class NodeService {
         name: node.name,
         latitude: node.latitude,
         longitude: node.longitude,
-        buildingId: node.buildingId,
+        buildingId: node.buildingId ?? null,
       };
 
       if (node.id > lastNodeId) {

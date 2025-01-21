@@ -3,5 +3,5 @@ export type UpdateNodeData = {
   name: string;
   latitude: number;
   longitude: number;
-  buildingId: number;
+  buildingId: number | null;
 };
