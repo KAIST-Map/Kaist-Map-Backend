@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsString } from "class-validator";
+import { IsNumber, IsString, ValidateNested, IsArray } from "class-validator";
 import { Type } from "class-transformer";
 
 class AllNodePayload {
@@ -54,5 +54,7 @@ export class CreateAllNodesPayload {
     type: [AllNodePayload],
   })
   @Type(() => AllNodePayload)
+  @ValidateNested({ each: true }) // 이 데코레이터 추가
+  @IsArray()
   nodes!: AllNodePayload[];
 }

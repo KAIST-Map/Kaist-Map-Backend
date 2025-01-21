@@ -12,8 +12,11 @@ async function bootstrap() {
 
   // CORS 설정 - AWS ElasticBeanstalk/ECS 환경 고려
   app.enableCors({
-    origin: process.env.CORS_ORIGIN || "*",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    origin: [
+      "http://localhost:8000",
+      "http://jtkim-loadbalancer-827728116.ap-northeast-2.elb.amazonaws.com",
+    ],
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
     credentials: true,
   });
   app.use(cookieParser());
