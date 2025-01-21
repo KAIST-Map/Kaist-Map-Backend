@@ -6,6 +6,7 @@ import { HttpExceptionFilter } from "./common/filter/exception.filter";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { join } from "path";
 import * as cookieParser from "cookie-parser";
+import { json } from "express";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -20,6 +21,8 @@ async function bootstrap() {
     credentials: true,
   });
   app.use(cookieParser());
+
+  app.use(json({ limit: "50mb" })); // 필요한 크기에 따라 조절 가능
 
   // Global Pipes
   app.useGlobalPipes(
