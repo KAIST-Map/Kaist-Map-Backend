@@ -2,6 +2,7 @@ import { Controller, Get, Param, Post, Body } from "@nestjs/common";
 import { EdgeRepository } from "./edge.repository";
 import { EdgeDto } from "./dto/edge.dto";
 import { EdgeService } from "./edge.service";
+import { EdgeListDto } from "./dto/edge.dto";
 import {
   ApiOperation,
   ApiResponse,
@@ -27,6 +28,17 @@ export class EdgeController {
     @Body() edgePayload: CreateEdgePayload
   ): Promise<EdgeDto> {
     return this.edgeService.createEdge(edgePayload, password);
+  }
+
+  @Get("edges/all")
+  @ApiOperation({ summary: "모든 엣지 조회" })
+  @ApiOkResponse({
+    status: 200,
+    description: "모든 엣지 조회 성공",
+    type: EdgeDto,
+  })
+  async getAllEdges(): Promise<EdgeListDto> {
+    return this.edgeService.getAllEdges();
   }
 
   @Get(":edgeId")
