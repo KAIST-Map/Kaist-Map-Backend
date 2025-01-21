@@ -9,6 +9,8 @@ import { RoutePointToBuildingQuery } from "./query/route.query";
 import { RouteBuildingToPointQuery } from "./query/route.query";
 import { CreateNodePayload } from "./payload/create-node.payload";
 import { ConfigService } from "@nestjs/config";
+import { CreateAllNodesPayload } from "./payload/create-all-nodes.payload";
+import { BadRequestException } from "@nestjs/common";
 @Injectable()
 export class NodeService {
   constructor(
@@ -79,5 +81,38 @@ export class NodeService {
     routeQuery: RouteBuildingToPointQuery
   ): Promise<RouteDto> {
     return this.nodeRepository.getRoutesBuildingToPoint(routeQuery);
+  }
+
+  async createAllNodes(
+    nodesPayload: CreateAllNodesPayload,
+    password: string
+  ): Promise<NodeListDto> {
+    if (password !== this.configService.get<string>("PASSWORD")) {
+      throw new UnauthorizedException("Invalid password");
+    }
+
+    const lastNodeId = await this.nodeRepository.getLastNode();
+
+    if (nodesPayload.nodes.length === 0) {
+      throw new BadRequestException("Nodes array is empty");
+    }
+
+    for (const node of nodesPayload.nodes) {
+      const data = {
+        id: node.id,
+        name: node.name,
+        latitude: node.latitude,
+        longitude: node.longitude,
+        buildingId: node.buildingId,
+      };
+      if (node.id > lastNodeId) {
+        await this.nodeRepository.createNode(data);
+      } else {
+        await this.nodeRepository.updateNode(data);
+      }
+    }
+
+    const updatedNodes = await this.nodeRepository.getNodes();
+    return NodeListDto.from(updatedNodes);
   }
 }

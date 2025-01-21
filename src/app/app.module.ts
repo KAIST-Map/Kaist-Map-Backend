@@ -9,6 +9,7 @@ import { EdgeModule } from "../edge/edge.module";
 import { CategoryModule } from "../category/category.module";
 import { BuildingModule } from "../building/building.module";
 import { AwsS3Module } from "src/common/aws/aws.module";
+import { ReportModule } from "../report/report.module";
 @Module({
   imports: [
     configModule,
@@ -18,6 +19,7 @@ import { AwsS3Module } from "src/common/aws/aws.module";
     CategoryModule,
     BuildingModule,
     AwsS3Module,
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

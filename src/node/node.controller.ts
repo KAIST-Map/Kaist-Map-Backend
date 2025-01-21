@@ -17,16 +17,20 @@ import { RouteBetweenBuildingsQuery } from "./query/route.query";
 import { RoutePointToBuildingQuery } from "./query/route.query";
 import { RouteBuildingToPointQuery } from "./query/route.query";
 import { CreateNodePayload } from "./payload/create-node.payload";
+import { CreateAllNodesPayload } from "./payload/create-all-nodes.payload";
+import { ApiTags } from "@nestjs/swagger";
+
 @Controller("node")
+@ApiTags("Node")
 export class NodeController {
   constructor(private readonly nodeService: NodeService) {}
 
-  @Post("nodes")
+  @Post("nodes/:password")
   @ApiOperation({ summary: "노드 생성" })
   @ApiOkResponse({ type: NodeDto })
   async createNode(
     @Body() nodePayload: CreateNodePayload,
-    @Param() password: string
+    @Param("password") password: string
   ): Promise<NodeDto> {
     return this.nodeService.createNode(nodePayload, password);
   }
@@ -39,6 +43,7 @@ export class NodeController {
   ): Promise<NodeDto> {
     return this.nodeService.getNode(nodeId);
   }
+
   @Get("nodes")
   @ApiOperation({ summary: "노드 정보 조회" })
   @ApiOkResponse({ type: NodeListDto })
@@ -96,5 +101,15 @@ export class NodeController {
     @Query() routeQuery: RouteBuildingToPointQuery
   ): Promise<RouteDto> {
     return this.nodeService.getRoutesBuildingToPoint(routeQuery);
+  }
+
+  @Post("nodes/all/:password")
+  @ApiOperation({ summary: "노드들 수정 및 새로 생긴 노드 생성" })
+  @ApiOkResponse({ type: NodeListDto })
+  async createAllNodes(
+    @Body() nodePayload: CreateAllNodesPayload,
+    @Param("password") password: string
+  ): Promise<NodeListDto> {
+    return this.nodeService.createAllNodes(nodePayload, password);
   }
 }

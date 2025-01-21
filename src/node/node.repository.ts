@@ -13,6 +13,7 @@ import { RouteBuildingToPointQuery } from "./query/route.query";
 import { CreateNodePayload } from "./payload/create-node.payload";
 import { CreateNodeData } from "./type/create-node-data.type";
 import { BuildingData } from "../building/type/building-data.type";
+import { UpdateNodeData } from "./type/update-node-data.type";
 @Injectable()
 export class NodeRepository {
   private kdTree: kdTree<NodeData> | null = null;
@@ -677,5 +678,25 @@ export class NodeRepository {
       },
     });
     return building;
+  }
+
+  async getLastNode(): Promise<number> {
+    const node = await this.prisma.node.findFirst({
+      orderBy: { id: "desc" },
+    });
+    return node?.id ?? 0;
+  }
+
+  async updateNode(nodeData: UpdateNodeData): Promise<NodeData> {
+    const node = await this.prisma.node.update({
+      where: { id: nodeData.id },
+      data: {
+        name: nodeData.name,
+        latitude: nodeData.latitude,
+        longitude: nodeData.longitude,
+        buildingId: nodeData.buildingId,
+      },
+    });
+    return node;
   }
 }
