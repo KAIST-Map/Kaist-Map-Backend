@@ -35,16 +35,7 @@ export class NodeController {
     return this.nodeService.createNode(nodePayload, password);
   }
 
-  @Get(":nodeId")
-  @ApiOperation({ summary: "노드 정보 조회" })
-  @ApiOkResponse({ type: NodeDto })
-  async getNode(
-    @Param("nodeId", ParseIntPipe) nodeId: number
-  ): Promise<NodeDto> {
-    return this.nodeService.getNode(nodeId);
-  }
-
-  @Get("nodes")
+  @Get("all")
   @ApiOperation({ summary: "노드 정보 조회" })
   @ApiOkResponse({ type: NodeListDto })
   async getNodes(): Promise<NodeListDto> {
@@ -101,6 +92,15 @@ export class NodeController {
     @Query() routeQuery: RouteBuildingToPointQuery
   ): Promise<RouteDto> {
     return this.nodeService.getRoutesBuildingToPoint(routeQuery);
+  }
+
+  @Get(":nodeId")
+  @ApiOperation({ summary: "노드 정보 조회" })
+  @ApiOkResponse({ type: NodeDto })
+  async getNode(
+    @Param("nodeId", ParseIntPipe) nodeId: number
+  ): Promise<NodeDto> {
+    return this.nodeService.getNode(nodeId);
   }
 
   @Post("nodes/all/:password")

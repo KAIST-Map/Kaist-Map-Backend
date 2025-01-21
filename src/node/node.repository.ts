@@ -112,7 +112,11 @@ export class NodeRepository {
   }
 
   async getNodes(): Promise<NodeData[]> {
-    const nodes = await this.prisma.node.findMany();
+    const nodes = await this.prisma.node.findMany({
+      orderBy: {
+        id: "asc",
+      },
+    });
     return nodes;
   }
 
