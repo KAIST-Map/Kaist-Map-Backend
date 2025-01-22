@@ -3,9 +3,13 @@ import { ReportDto } from "./dto/report.dto";
 import { ReportRepository } from "./report.repository";
 import { ReportData } from "./type/report-data.type";
 import { CreateReportPayload } from "./payload/report.payload";
+import { NotificationService } from "../notification/notification.service";
 @Injectable()
 export class ReportService {
-  constructor(private readonly reportRepository: ReportRepository) {}
+  constructor(
+    private readonly reportRepository: ReportRepository,
+    private readonly notificationService: NotificationService
+  ) {}
 
   async createReport(payload: CreateReportPayload): Promise<ReportDto> {
     const data = {
@@ -17,6 +21,9 @@ export class ReportService {
     };
 
     const report = await this.reportRepository.createReport(data);
+
+    await this.notificationService.sendNewReportNotification(report);
+
     return ReportDto.from(report);
   }
 }

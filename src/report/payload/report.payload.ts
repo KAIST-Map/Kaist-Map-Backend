@@ -1,5 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsNotEmpty, IsOptional, IsString, IsArray } from "class-validator";
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsArray,
+  IsEmail,
+} from "class-validator";
 
 export class CreateReportPayload {
   @IsNotEmpty()
@@ -26,7 +32,7 @@ export class CreateReportPayload {
   phoneNumber?: string | null;
 
   @IsOptional()
-  @IsString()
+  @IsEmail()
   @ApiPropertyOptional({
     description: "신고 이메일",
     example: "test@test.com",

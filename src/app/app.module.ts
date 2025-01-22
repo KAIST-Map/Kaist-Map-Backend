@@ -10,6 +10,7 @@ import { CategoryModule } from "../category/category.module";
 import { BuildingModule } from "../building/building.module";
 import { AwsS3Module } from "src/common/aws/aws.module";
 import { ReportModule } from "../report/report.module";
+import { NotificationModule } from "../notification/notification.module";
 @Module({
   imports: [
     configModule,
@@ -20,6 +21,7 @@ import { ReportModule } from "../report/report.module";
     BuildingModule,
     AwsS3Module,
     ReportModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
