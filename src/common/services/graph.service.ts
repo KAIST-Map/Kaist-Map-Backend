@@ -49,8 +49,7 @@ export class GraphService implements OnModuleInit {
     }
     return this.graphData;
   }
-
   async updateGraphData() {
-    return await this.initializeGraph();
+    await this.initializeGraph();
   }
 }

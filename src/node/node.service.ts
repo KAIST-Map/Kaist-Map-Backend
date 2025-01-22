@@ -17,13 +17,14 @@ import {
   RoutePointToBuildingQuery,
   RouteBuildingToPointQuery,
 } from "./query/route.query";
-
+import { GraphService } from "../common/services/graph.service";
 @Injectable()
 export class NodeService {
   constructor(
     private readonly nodeRepository: NodeRepository,
     private readonly routingService: RoutingService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly graphService: GraphService
   ) {}
 
   private validatePassword(password: string) {
@@ -127,5 +128,10 @@ export class NodeService {
 
     const updatedNodes = await this.nodeRepository.getNodes();
     return NodeListDto.from(updatedNodes);
+  }
+
+  async updateGraph(password: string): Promise<void> {
+    this.validatePassword(password);
+    await this.graphService.updateGraphData();
   }
 }

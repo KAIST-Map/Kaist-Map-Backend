@@ -19,11 +19,15 @@ import { RouteBuildingToPointQuery } from "./query/route.query";
 import { CreateNodePayload } from "./payload/create-node.payload";
 import { CreateAllNodesPayload } from "./payload/create-all-nodes.payload";
 import { ApiTags } from "@nestjs/swagger";
+import { GraphService } from "../common/services/graph.service";
 
 @Controller("node")
 @ApiTags("Node")
 export class NodeController {
-  constructor(private readonly nodeService: NodeService) {}
+  constructor(
+    private readonly nodeService: NodeService,
+    private readonly graphService: GraphService
+  ) {}
 
   @Post("/:password")
   @ApiOperation({ summary: "노드 생성" })
@@ -111,5 +115,12 @@ export class NodeController {
     @Param("password") password: string
   ): Promise<NodeListDto> {
     return this.nodeService.createAllNodes(nodePayload, password);
+  }
+
+  @Post("graph/:password")
+  @ApiOperation({ summary: "그래프 업데이트" })
+  @ApiOkResponse()
+  async updateGraph(@Param("password") password: string): Promise<void> {
+    return this.nodeService.updateGraph(password);
   }
 }
