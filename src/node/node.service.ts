@@ -73,7 +73,7 @@ export class NodeService {
     return NodeListDto.from(nodes);
   }
 
-  // 라우팅 관련 메서드들을 RoutingService로 위임
+  // 라우팅 관련 메서드들을 RoutingService로..
   async getRoutesBetweenPoints(
     routeQuery: RouteBetweenPointsQuery
   ): Promise<RouteDto> {

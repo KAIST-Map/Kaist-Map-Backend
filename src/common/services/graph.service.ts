@@ -12,7 +12,6 @@ export class GraphService implements OnModuleInit {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  // NestJS 라이프사이클 훅을 통해 자동 초기화
   async onModuleInit() {
     await this.initializeGraph();
   }

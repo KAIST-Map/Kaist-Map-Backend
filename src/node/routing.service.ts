@@ -167,19 +167,19 @@ export class RoutingService {
   //그냥 뭐 다 셋으로 취급해도 로직상 다를게 하나도 없음 그냥 프론트에서 구분해주는게 편하다고 해서..
 
   async getRoutesBetweenPoints(
-    routePayload: RouteBetweenPointsQuery
+    routeQuery: RouteBetweenPointsQuery
   ): Promise<RouteData> {
     const edges = this.getWeightedDistance(
-      routePayload.wantBeam,
-      routePayload.wantFreeOfRain
+      routeQuery.wantBeam,
+      routeQuery.wantFreeOfRain
     );
     const startNode = await this.nodeRepository.findNearestNode(
-      routePayload.startLatitude,
-      routePayload.startLongitude
+      routeQuery.startLatitude,
+      routeQuery.startLongitude
     );
     const endNode = await this.nodeRepository.findNearestNode(
-      routePayload.endLatitude,
-      routePayload.endLongitude
+      routeQuery.endLatitude,
+      routeQuery.endLongitude
     );
 
     const graph = this.createGraph(edges);
@@ -197,17 +197,17 @@ export class RoutingService {
   }
 
   async getRoutesBetweenBuildings(
-    routePayload: RouteBetweenBuildingsQuery
+    routeQuery: RouteBetweenBuildingsQuery
   ): Promise<RouteData> {
     const edges = this.getWeightedDistance(
-      routePayload.wantBeam,
-      routePayload.wantFreeOfRain
+      routeQuery.wantBeam,
+      routeQuery.wantFreeOfRain
     );
     const startBuildingNodes = await this.nodeRepository.getBuildingNodes(
-      routePayload.startBuildingId
+      routeQuery.startBuildingId
     );
     const endBuildingNodes = await this.nodeRepository.getBuildingNodes(
-      routePayload.endBuildingId
+      routeQuery.endBuildingId
     );
 
     const graph = this.createGraph(edges);
@@ -225,18 +225,18 @@ export class RoutingService {
   }
 
   async getRoutesPointToBuilding(
-    routePayload: RoutePointToBuildingQuery
+    routeQuery: RoutePointToBuildingQuery
   ): Promise<RouteData> {
     const edges = this.getWeightedDistance(
-      routePayload.wantBeam,
-      routePayload.wantFreeOfRain
+      routeQuery.wantBeam,
+      routeQuery.wantFreeOfRain
     );
     const startNode = await this.nodeRepository.findNearestNode(
-      routePayload.startLatitude,
-      routePayload.startLongitude
+      routeQuery.startLatitude,
+      routeQuery.startLongitude
     );
     const endBuildingNodes = await this.nodeRepository.getBuildingNodes(
-      routePayload.endBuildingId
+      routeQuery.endBuildingId
     );
 
     const graph = this.createGraph(edges);
@@ -254,18 +254,18 @@ export class RoutingService {
   }
 
   async getRoutesBuildingToPoint(
-    routePayload: RouteBuildingToPointQuery
+    routeQuery: RouteBuildingToPointQuery
   ): Promise<RouteData> {
     const edges = this.getWeightedDistance(
-      routePayload.wantBeam,
-      routePayload.wantFreeOfRain
+      routeQuery.wantBeam,
+      routeQuery.wantFreeOfRain
     );
     const startBuildingNodes = await this.nodeRepository.getBuildingNodes(
-      routePayload.startBuildingId
+      routeQuery.startBuildingId
     );
     const endNode = await this.nodeRepository.findNearestNode(
-      routePayload.endLatitude,
-      routePayload.endLongitude
+      routeQuery.endLatitude,
+      routeQuery.endLongitude
     );
 
     const graph = this.createGraph(edges);
