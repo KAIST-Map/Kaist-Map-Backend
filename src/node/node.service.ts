@@ -1,29 +1,45 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { NodeDto } from "./dto/node.dto";
-import { NodeRepository } from "./node.repository";
-import { NodeListDto } from "./dto/node.dto";
-import { RouteDto } from "./dto/route.dto";
-import { RouteBetweenPointsQuery } from "./query/route.query";
-import { RouteBetweenBuildingsQuery } from "./query/route.query";
-import { RoutePointToBuildingQuery } from "./query/route.query";
-import { RouteBuildingToPointQuery } from "./query/route.query";
-import { CreateNodePayload } from "./payload/create-node.payload";
+// node.service.ts
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException,
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { NodeRepository } from "./node.repository";
+import { RoutingService } from "./routing.service";
+import { NodeDto, NodeListDto } from "./dto/node.dto";
+import { RouteDto } from "./dto/route.dto";
+import { CreateNodePayload } from "./payload/create-node.payload";
+import { CreateAllNodesPayload } from "./payload/create-all-nodes.payload";
+import {
+  RouteBetweenPointsQuery,
+  RouteBetweenBuildingsQuery,
+  RoutePointToBuildingQuery,
+  RouteBuildingToPointQuery,
+} from "./query/route.query";
+import { GraphService } from "../common/services/graph.service";
 @Injectable()
 export class NodeService {
   constructor(
     private readonly nodeRepository: NodeRepository,
-    private readonly configService: ConfigService
+    private readonly routingService: RoutingService,
+    private readonly configService: ConfigService,
+    private readonly graphService: GraphService
   ) {}
+
+  private validatePassword(password: string) {
+    const envPassword = this.configService.get<string>("PASSWORD");
+    if (password !== envPassword) {
+      throw new UnauthorizedException("Invalid password");
+    }
+  }
 
   async createNode(
     nodePayload: CreateNodePayload,
     password: string
   ): Promise<NodeDto> {
-    const envPassword = this.configService.get<string>("PASSWORD");
-    if (password !== envPassword) {
-      throw new UnauthorizedException("Invalid password");
-    }
+    this.validatePassword(password);
+
     if (nodePayload.buildingId) {
       const building = await this.nodeRepository.getBuilding(
         nodePayload.buildingId
@@ -57,27 +73,65 @@ export class NodeService {
     return NodeListDto.from(nodes);
   }
 
+  // 라우팅 관련 메서드들을 RoutingService로..
   async getRoutesBetweenPoints(
     routeQuery: RouteBetweenPointsQuery
   ): Promise<RouteDto> {
-    return this.nodeRepository.getRoutesBetweenPoints(routeQuery);
+    return this.routingService.getRoutesBetweenPoints(routeQuery);
   }
 
   async getRoutesBetweenBuildings(
     routeQuery: RouteBetweenBuildingsQuery
   ): Promise<RouteDto> {
-    return this.nodeRepository.getRoutesBetweenBuildings(routeQuery);
+    return this.routingService.getRoutesBetweenBuildings(routeQuery);
   }
 
   async getRoutesPointToBuilding(
     routeQuery: RoutePointToBuildingQuery
   ): Promise<RouteDto> {
-    return this.nodeRepository.getRoutesPointToBuilding(routeQuery);
+    return this.routingService.getRoutesPointToBuilding(routeQuery);
   }
 
   async getRoutesBuildingToPoint(
     routeQuery: RouteBuildingToPointQuery
   ): Promise<RouteDto> {
-    return this.nodeRepository.getRoutesBuildingToPoint(routeQuery);
+    return this.routingService.getRoutesBuildingToPoint(routeQuery);
+  }
+
+  async createAllNodes(
+    nodesPayload: CreateAllNodesPayload,
+    password: string
+  ): Promise<NodeListDto> {
+    this.validatePassword(password);
+
+    if (nodesPayload.nodes.length === 0) {
+      throw new BadRequestException("Nodes array is empty");
+    }
+
+    const lastNodeId = await this.nodeRepository.getLastNode();
+
+    for (const node of nodesPayload.nodes) {
+      const data = {
+        id: node.id,
+        name: node.name,
+        latitude: node.latitude,
+        longitude: node.longitude,
+        buildingId: node.buildingId ?? null,
+      };
+
+      if (node.id > lastNodeId) {
+        await this.nodeRepository.createNode(data);
+      } else {
+        await this.nodeRepository.updateNode(data);
+      }
+    }
+
+    const updatedNodes = await this.nodeRepository.getNodes();
+    return NodeListDto.from(updatedNodes);
+  }
+
+  async updateGraph(password: string): Promise<void> {
+    this.validatePassword(password);
+    await this.graphService.updateGraphData();
   }
 }

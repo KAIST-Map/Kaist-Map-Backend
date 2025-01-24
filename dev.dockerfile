@@ -17,6 +17,7 @@ RUN yarn build
 FROM node:20-alpine as runner
 ENV TZ=Asia/Seoul
 ENV PORT=3000
+
 ENV NODE_ENV=dev
 
 WORKDIR /usr/src/app

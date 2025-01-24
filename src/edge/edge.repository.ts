@@ -3,9 +3,8 @@ import { PrismaService } from "../common/services/prisma.service";
 import { EdgeData } from "./type/edge-data.type";
 import { NodeData } from "../node/type/node-data.type";
 import { CreateEdgeData } from "./type/create-edge-data.type";
-import { CreateReportedRoadData } from "./type/create-reportedRoad-data.type";
-import { ReportedRoadData } from "./type/reportedRoadData.type";
 import { ReportStatus } from "@prisma/client";
+import { UpdateEdgeData } from "./type/update-edge-data.type";
 @Injectable()
 export class EdgeRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -22,6 +21,11 @@ export class EdgeRepository {
       where: { id: nodeId },
     });
     return node;
+  }
+
+  async getAllEdges(): Promise<EdgeData[]> {
+    const edges = await this.prisma.edge.findMany();
+    return edges;
   }
 
   async createEdge(edgeData: CreateEdgeData): Promise<EdgeData> {
@@ -46,30 +50,23 @@ export class EdgeRepository {
     return edge;
   }
 
-  async createReportedRoad(
-    reportedRoadData: CreateReportedRoadData
-  ): Promise<ReportedRoadData> {
-    const reportedRoad = await this.prisma.reportedRoad.create({
+  async getLastEdgeId(): Promise<number> {
+    const edge = await this.prisma.edge.findFirst({
+      orderBy: { id: "desc" },
+    });
+    return edge?.id ?? 0;
+  }
+
+  async updateEdge(edgeData: UpdateEdgeData): Promise<EdgeData> {
+    return await this.prisma.edge.update({
+      where: { id: edgeData.id },
       data: {
-        latitude1: reportedRoadData.latitude1,
-        longitude1: reportedRoadData.longitude1,
-        latitude2: reportedRoadData.latitude2,
-        longitude2: reportedRoadData.longitude2,
-        imageUrls: reportedRoadData.imageUrls,
-        description: reportedRoadData.description,
-        reportStatus: ReportStatus.PENDING,
-      },
-      select: {
-        id: true,
-        latitude1: true,
-        longitude1: true,
-        latitude2: true,
-        longitude2: true,
-        imageUrls: true,
-        description: true,
-        reportStatus: true,
+        nodeId1: edgeData.nodeId1,
+        nodeId2: edgeData.nodeId2,
+        isFreeOfRain: edgeData.isFreeOfRain,
+        distance: edgeData.distance,
+        beamWeight: edgeData.beamWeight,
       },
     });
-    return reportedRoad;
   }
 }

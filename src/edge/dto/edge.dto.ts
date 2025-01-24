@@ -4,6 +4,12 @@ import { EdgeData } from "../type/edge-data.type";
 
 export class EdgeDto {
   @ApiProperty({
+    description: "엣지 아이디",
+    type: Number,
+  })
+  id!: number;
+
+  @ApiProperty({
     description: "노드 1의 ID",
     type: Number,
   })
@@ -35,6 +41,7 @@ export class EdgeDto {
 
   static from(edge: EdgeData): EdgeDto {
     return {
+      id: edge.id,
       nodeId1: edge.nodeId1,
       nodeId2: edge.nodeId2,
       distance: edge.distance,

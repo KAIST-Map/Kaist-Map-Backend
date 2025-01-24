@@ -116,13 +116,7 @@ export class BuildingRepository {
 
   async getBuildingsByName(inputName: string): Promise<BuildingData[]> {
     const name = inputName.toLowerCase();
-    return await this.prisma.building.findMany({
-      where: {
-        OR: [
-          { name: { contains: name, mode: "insensitive" } },
-          { alias: { hasSome: [`%${name}%`] } },
-        ],
-      },
+    const buildings = await this.prisma.building.findMany({
       select: {
         id: true,
         name: true,
@@ -137,5 +131,11 @@ export class BuildingRepository {
       },
       orderBy: [{ importance: "desc" }],
     });
+
+    return buildings.filter(
+      (building) =>
+        building.name.toLowerCase().includes(name) ||
+        building.alias.some((alias) => alias.toLowerCase().includes(name))
+    );
   }
 }

@@ -74,16 +74,15 @@ model Category {
   @@map("category")
 }
 
-model ReportedRoad {
+model Report {
   id Int @id @default(autoincrement())
-  latitude1 Float
-  longitude1 Float
-  latitude2 Float
-  longitude2 Float
   imageUrls String[]
-  description String? 
-  reportStatus      ReportStatus @default(PENDING) 
-  @@map("reported_road")
+  title String
+  description String
+  phoneNumber String?
+  email String?
+  reportStatus ReportStatus @default(PENDING)
+  @@map("report")
 }
 
 enum ReportStatus {
@@ -91,4 +90,6 @@ enum ReportStatus {
   APPROVED
   REJECTED
 }
+
+
 

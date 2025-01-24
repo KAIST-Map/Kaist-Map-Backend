@@ -1,7 +1,9 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { AwsService } from "./aws.service";
+import { ApiTags } from "@nestjs/swagger";
 
 @Controller("aws")
+@ApiTags("AWS Image Upload")
 export class AwsController {
   constructor(private readonly awsService: AwsService) {}
 

@@ -8,6 +8,9 @@ import { NodeModule } from "../node/node.module";
 import { EdgeModule } from "../edge/edge.module";
 import { CategoryModule } from "../category/category.module";
 import { BuildingModule } from "../building/building.module";
+import { AwsS3Module } from "src/common/aws/aws.module";
+import { ReportModule } from "../report/report.module";
+import { NotificationModule } from "../notification/notification.module";
 @Module({
   imports: [
     configModule,
@@ -16,6 +19,9 @@ import { BuildingModule } from "../building/building.module";
     EdgeModule,
     CategoryModule,
     BuildingModule,
+    AwsS3Module,
+    ReportModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

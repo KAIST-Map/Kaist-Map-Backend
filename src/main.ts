@@ -6,14 +6,18 @@ import { HttpExceptionFilter } from "./common/filter/exception.filter";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { join } from "path";
 import * as cookieParser from "cookie-parser";
+import { json } from "express";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // CORS 설정 - AWS ElasticBeanstalk/ECS 환경 고려
   app.enableCors({
-    origin: process.env.CORS_ORIGIN || "*",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    origin: [
+      "http://localhost:8000",
+      "http://jtkim-loadbalancer-827728116.ap-northeast-2.elb.amazonaws.com",
+    ],
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
     credentials: true,
   });
   app.use(cookieParser());
@@ -27,6 +31,7 @@ async function bootstrap() {
       stopAtFirstError: true,
     })
   );
+  app.use(json({ limit: "50mb" })); // 필요한 크기에 따라 조절 가능
 
   // Exception Filter
   app.useGlobalFilters(new HttpExceptionFilter());

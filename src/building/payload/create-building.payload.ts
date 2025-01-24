@@ -37,7 +37,7 @@ export class CreateBuildingPayload {
 
   @IsNotEmpty()
   @IsArray()
-  @IsUrl(undefined, { each: true })
+  @IsString({ each: true })
   @ApiProperty({
     description: "건물 이미지 URL",
     example: ["건물 이미지 URL"],
@@ -55,7 +55,7 @@ export class CreateBuildingPayload {
   importance!: number;
 
   @IsNotEmpty()
-  @IsString()
+  @IsString({ each: true })
   @ApiProperty({
     description: "건물 별칭",
     example: ["건물 별칭"],

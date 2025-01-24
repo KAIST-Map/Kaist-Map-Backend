@@ -34,15 +34,6 @@ export class CreateEdgePayload {
   @IsNumber()
   @Type(() => Number)
   @ApiProperty({
-    description: "거리",
-    example: 100,
-    type: Number,
-  })
-  distance!: number;
-
-  @IsNumber()
-  @Type(() => Number)
-  @ApiProperty({
     description: "빔 가중치",
     example: 100,
     type: Number,

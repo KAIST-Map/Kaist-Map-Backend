@@ -12,7 +12,6 @@ export class GraphService implements OnModuleInit {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  // NestJS 라이프사이클 훅을 통해 자동 초기화
   async onModuleInit() {
     await this.initializeGraph();
   }
@@ -22,6 +21,7 @@ export class GraphService implements OnModuleInit {
       const [edges, nodes] = await Promise.all([
         this.prisma.edge.findMany({
           select: {
+            id: true,
             nodeId1: true,
             nodeId2: true,
             distance: true,
@@ -48,8 +48,7 @@ export class GraphService implements OnModuleInit {
     }
     return this.graphData;
   }
-
   async updateGraphData() {
-    return await this.initializeGraph();
+    await this.initializeGraph();
   }
 }

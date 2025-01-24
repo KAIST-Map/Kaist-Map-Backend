@@ -17,29 +17,29 @@ import { RouteBetweenBuildingsQuery } from "./query/route.query";
 import { RoutePointToBuildingQuery } from "./query/route.query";
 import { RouteBuildingToPointQuery } from "./query/route.query";
 import { CreateNodePayload } from "./payload/create-node.payload";
-@Controller("node")
-export class NodeController {
-  constructor(private readonly nodeService: NodeService) {}
+import { CreateAllNodesPayload } from "./payload/create-all-nodes.payload";
+import { ApiTags } from "@nestjs/swagger";
+import { GraphService } from "../common/services/graph.service";
 
-  @Post("nodes")
+@Controller("node")
+@ApiTags("Node")
+export class NodeController {
+  constructor(
+    private readonly nodeService: NodeService,
+    private readonly graphService: GraphService
+  ) {}
+
+  @Post("/:password")
   @ApiOperation({ summary: "노드 생성" })
   @ApiOkResponse({ type: NodeDto })
   async createNode(
     @Body() nodePayload: CreateNodePayload,
-    @Param() password: string
+    @Param("password") password: string
   ): Promise<NodeDto> {
     return this.nodeService.createNode(nodePayload, password);
   }
 
-  @Get(":nodeId")
-  @ApiOperation({ summary: "노드 정보 조회" })
-  @ApiOkResponse({ type: NodeDto })
-  async getNode(
-    @Param("nodeId", ParseIntPipe) nodeId: number
-  ): Promise<NodeDto> {
-    return this.nodeService.getNode(nodeId);
-  }
-  @Get("nodes")
+  @Get("nodes/all")
   @ApiOperation({ summary: "노드 정보 조회" })
   @ApiOkResponse({ type: NodeListDto })
   async getNodes(): Promise<NodeListDto> {
@@ -96,5 +96,31 @@ export class NodeController {
     @Query() routeQuery: RouteBuildingToPointQuery
   ): Promise<RouteDto> {
     return this.nodeService.getRoutesBuildingToPoint(routeQuery);
+  }
+
+  @Get(":nodeId")
+  @ApiOperation({ summary: "노드 정보 조회" })
+  @ApiOkResponse({ type: NodeDto })
+  async getNode(
+    @Param("nodeId", ParseIntPipe) nodeId: number
+  ): Promise<NodeDto> {
+    return this.nodeService.getNode(nodeId);
+  }
+
+  @Post("nodes/all/:password")
+  @ApiOperation({ summary: "노드들 수정 및 새로 생긴 노드 생성" })
+  @ApiOkResponse({ type: NodeListDto })
+  async createAllNodes(
+    @Body() nodePayload: CreateAllNodesPayload,
+    @Param("password") password: string
+  ): Promise<NodeListDto> {
+    return this.nodeService.createAllNodes(nodePayload, password);
+  }
+
+  @Post("graph/:password")
+  @ApiOperation({ summary: "그래프 업데이트" })
+  @ApiOkResponse()
+  async updateGraph(@Param("password") password: string): Promise<void> {
+    return this.nodeService.updateGraph(password);
   }
 }

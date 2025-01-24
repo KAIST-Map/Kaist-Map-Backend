@@ -1,8 +1,8 @@
-export type EdgeData = {
+export type UpdateEdgeData = {
   id: number;
   nodeId1: number;
   nodeId2: number;
-  distance: number;
   isFreeOfRain: boolean;
+  distance: number;
   beamWeight: number;
 };

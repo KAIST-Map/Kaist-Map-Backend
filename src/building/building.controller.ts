@@ -37,7 +37,7 @@ export class BuildingController {
     return this.buildingService.getBuildings();
   }
 
-  @Get(":id")
+  @Get("id/:id")
   @ApiResponse({
     type: BuildingDto,
   })
@@ -55,7 +55,7 @@ export class BuildingController {
     return this.buildingService.getBuildingsByCategory(categoryId);
   }
 
-  @Get(":name")
+  @Get("name/:name")
   @ApiResponse({
     type: BuildingListDto,
   })
