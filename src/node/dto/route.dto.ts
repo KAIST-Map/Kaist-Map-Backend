@@ -15,10 +15,17 @@ export class RouteDto {
   })
   totalDistance!: number;
 
+  @ApiProperty({
+    description: "가중치가 적용된 총 이동 거리",
+    type: Number,
+  })
+  weightedTotalDistance!: number;
+
   static from(RouteData: RouteData): RouteDto {
     return {
       path: NodeDto.fromArray(RouteData.path),
       totalDistance: RouteData.totalDistance,
+      weightedTotalDistance: RouteData.weightedTotalDistance,
     };
   }
 }

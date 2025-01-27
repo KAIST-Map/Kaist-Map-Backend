@@ -54,7 +54,11 @@ export class RoutingService {
     graph: Map<number, Array<{ nodeId: number; distance: number }>>,
     startNodes: Set<number>,
     endNodes: Set<number>
-  ): Promise<{ path: number[]; totalDistance: number }> {
+  ): Promise<{
+    path: number[];
+    weightedTotalDistance: number;
+    originalTotalDistance: number;
+  }> {
     const distances = new Map<number, number>();
     const previous = new Map<number, number>();
     const visited = new Set<number>();
@@ -105,10 +109,9 @@ export class RoutingService {
       throw new Error("No path exists between the points");
     }
 
-    // 경로 재구성과 총 거리 계산
+    // 경로 재구성
     const path: number[] = [];
     let currentNodeId = foundEndNode;
-    let totalDistance = 0;
 
     while (!startNodes.has(currentNodeId)) {
       path.unshift(currentNodeId);
@@ -120,22 +123,36 @@ export class RoutingService {
     }
     path.unshift(currentNodeId);
 
-    // 총 거리 계산
+    // weighted distance와 original distance 계산
+    let weightedTotalDistance = 0;
+    let originalTotalDistance = 0;
+
+    const originalEdges = this.graphService.getGraphData().edges;
+
     for (let i = 0; i < path.length - 1; i++) {
-      const edge = edges.find(
+      const weightedEdge = edges.find(
         (e) =>
           (e.nodeId1 === path[i] && e.nodeId2 === path[i + 1]) ||
           (e.nodeId2 === path[i] && e.nodeId1 === path[i + 1])
       );
-      if (!edge) {
+
+      const originalEdge = originalEdges.find(
+        (e) =>
+          (e.nodeId1 === path[i] && e.nodeId2 === path[i + 1]) ||
+          (e.nodeId2 === path[i] && e.nodeId1 === path[i + 1])
+      );
+
+      if (!weightedEdge || !originalEdge) {
         throw new Error(
           `No edge found between nodes ${path[i]} and ${path[i + 1]}`
         );
       }
-      totalDistance += edge.distance;
+
+      weightedTotalDistance += weightedEdge.distance;
+      originalTotalDistance += originalEdge.distance;
     }
 
-    return { path, totalDistance };
+    return { path, originalTotalDistance, weightedTotalDistance };
   }
 
   private getWeightedDistance(
@@ -183,16 +200,18 @@ export class RoutingService {
     );
 
     const graph = this.createGraph(edges);
-    const { path, totalDistance } = await this.findPath(
-      edges,
-      graph,
-      new Set([startNode.id]),
-      new Set([endNode.id])
-    );
+    const { path, originalTotalDistance, weightedTotalDistance } =
+      await this.findPath(
+        edges,
+        graph,
+        new Set([startNode.id]),
+        new Set([endNode.id])
+      );
 
     return {
       path: await this.nodeRepository.getNodesInPath(path),
-      totalDistance,
+      totalDistance: originalTotalDistance,
+      weightedTotalDistance: weightedTotalDistance,
     };
   }
 
@@ -211,16 +230,18 @@ export class RoutingService {
     );
 
     const graph = this.createGraph(edges);
-    const { path, totalDistance } = await this.findPath(
-      edges,
-      graph,
-      new Set(startBuildingNodes.map((node) => node.id)),
-      new Set(endBuildingNodes.map((node) => node.id))
-    );
+    const { path, originalTotalDistance, weightedTotalDistance } =
+      await this.findPath(
+        edges,
+        graph,
+        new Set(startBuildingNodes.map((node) => node.id)),
+        new Set(endBuildingNodes.map((node) => node.id))
+      );
 
     return {
       path: await this.nodeRepository.getNodesInPath(path),
-      totalDistance,
+      totalDistance: originalTotalDistance,
+      weightedTotalDistance: weightedTotalDistance,
     };
   }
 
@@ -240,16 +261,18 @@ export class RoutingService {
     );
 
     const graph = this.createGraph(edges);
-    const { path, totalDistance } = await this.findPath(
-      edges,
-      graph,
-      new Set([startNode.id]),
-      new Set(endBuildingNodes.map((node) => node.id))
-    );
+    const { path, weightedTotalDistance, originalTotalDistance } =
+      await this.findPath(
+        edges,
+        graph,
+        new Set([startNode.id]),
+        new Set(endBuildingNodes.map((node) => node.id))
+      );
 
     return {
       path: await this.nodeRepository.getNodesInPath(path),
-      totalDistance,
+      totalDistance: originalTotalDistance,
+      weightedTotalDistance: weightedTotalDistance,
     };
   }
 
@@ -269,16 +292,18 @@ export class RoutingService {
     );
 
     const graph = this.createGraph(edges);
-    const { path, totalDistance } = await this.findPath(
-      edges,
-      graph,
-      new Set(startBuildingNodes.map((node) => node.id)),
-      new Set([endNode.id])
-    );
+    const { path, originalTotalDistance, weightedTotalDistance } =
+      await this.findPath(
+        edges,
+        graph,
+        new Set(startBuildingNodes.map((node) => node.id)),
+        new Set([endNode.id])
+      );
 
     return {
       path: await this.nodeRepository.getNodesInPath(path),
-      totalDistance,
+      totalDistance: originalTotalDistance,
+      weightedTotalDistance: weightedTotalDistance,
     };
   }
 }
