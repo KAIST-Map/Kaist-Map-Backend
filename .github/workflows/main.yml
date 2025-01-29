@@ -1,0 +1,97 @@
+name: AWS ECR Deploy
+
+on:
+  push:
+    branches:
+      - '**'  # 모든 브랜치에서 실행
+  workflow_dispatch:
+
+env:
+  AWS_REGION: ap-northeast-2
+  ECR_REGISTRY: 270116628011.dkr.ecr.ap-northeast-2.amazonaws.com
+  IMAGE_NAME: jtkim/backend
+  DOCKERFILE: dev.dockerfile
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        cache: 'yarn'
+
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Generate Prisma Client
+      run: yarn prisma generate
+
+    - name: Start development server and test
+      run: |
+        yarn start:dev &
+        DEVSERVER_PID=$!
+        
+        # 서버가 시작될 때까지 대기 (최대 30초)
+        timeout=30
+        while [ $timeout -gt 0 ]; do
+          if curl -s http://localhost:3000/health > /dev/null; then
+            echo "Development server is running successfully"
+            kill $DEVSERVER_PID
+            exit 0
+          fi
+          sleep 1
+          timeout=$((timeout-1))
+        done
+        
+        echo "Development server failed to start"
+        kill $DEVSERVER_PID
+        exit 1
+
+    # main 브랜치인 경우에만 ECR 배포 실행
+    - name: Configure AWS credentials
+      if: github.ref == 'refs/heads/main'
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      if: github.ref == 'refs/heads/main'
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Set up Docker Buildx
+      if: github.ref == 'refs/heads/main'
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build and push Docker image
+      if: github.ref == 'refs/heads/main'
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: ${{ env.DOCKERFILE }}
+        platforms: linux/amd64
+        push: true
+        tags: |
+          ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    # 브랜치별 결과 메시지 출력
+    - name: Print completion message
+      run: |
+        if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
+          echo "Successfully tested and deployed to ECR"
+        else
+          echo "Successfully tested on branch ${GITHUB_REF#refs/heads/}"
+        fi
