@@ -97,10 +97,18 @@ jobs:
         build-args: |
           NODE_ENV=dev
 
+    - name: Deploy to ECS
+      if: github.ref == 'refs/heads/main'
+      run: |
+        aws ecs update-service \
+          --cluster jtkimcluster \
+          --service jtkim-kaistmap \
+          --force-new-deployment
+          
     - name: Print completion message
       run: |
         if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
-          echo "Successfully tested and deployed to ECR"
+          echo "Successfully tested, deployed to ECR, and updated ECS service"
         else
           echo "Successfully tested on branch ${GITHUB_REF#refs/heads/}"
         fi
