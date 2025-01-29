@@ -3,7 +3,7 @@ name: AWS ECR Deploy
 on:
   push:
     branches:
-      - '**'  # 모든 브랜치에서 실행
+      - '**'
   workflow_dispatch:
 
 env:
@@ -22,6 +22,10 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+
+    - name: Create env file
+      run: |
+        echo "${{ secrets.DEV_ENV }}" > .dev.env
 
     - name: Setup Node.js
       uses: actions/setup-node@v3
@@ -56,7 +60,6 @@ jobs:
         kill $DEVSERVER_PID
         exit 1
 
-    # main 브랜치인 경우에만 ECR 배포 실행
     - name: Configure AWS credentials
       if: github.ref == 'refs/heads/main'
       uses: aws-actions/configure-aws-credentials@v4
@@ -86,8 +89,9 @@ jobs:
           ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
+        build-args: |
+          NODE_ENV=dev
 
-    # 브랜치별 결과 메시지 출력
     - name: Print completion message
       run: |
         if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
