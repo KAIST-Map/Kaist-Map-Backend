@@ -62,10 +62,15 @@ jobs:
 
     - name: Configure AWS credentials
       if: github.ref == 'refs/heads/main'
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-        aws-region: ${{ env.AWS_REGION }}
+      run: |
+        # .dev.env 파일에서 AWS 자격증명 추출
+        AWS_ACCESS_KEY_ID=$(grep AWS_ACCESS_KEY_ID .dev.env | cut -d '=' -f2)
+        AWS_SECRET_ACCESS_KEY=$(grep AWS_SECRET_ACCESS_KEY .dev.env | cut -d '=' -f2)
+        
+        # AWS CLI 자격증명 설정
+        aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
+        aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
+        aws configure set region "${{ env.AWS_REGION }}"
 
     - name: Login to Amazon ECR
       if: github.ref == 'refs/heads/main'
