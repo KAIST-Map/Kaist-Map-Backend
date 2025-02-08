@@ -2,7 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsNumber, IsBoolean } from "class-validator";
 import { Transform } from "class-transformer";
 import { Type } from "class-transformer";
-import { Gender } from "@prisma/client";
 
 export class RouteBetweenPointsQuery {
   @IsNotEmpty()
