@@ -44,6 +44,7 @@ export class EdgeRepository {
         isFreeOfRain: true,
         distance: true,
         beamWeight: true,
+        inDormitory: true,
       },
     });
 

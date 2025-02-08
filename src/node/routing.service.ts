@@ -181,7 +181,7 @@ export class RoutingService {
     return edges;
   }
 
-  //그냥 뭐 다 셋으로 취급해도 로직상 다를게 하나도 없음 그냥 프론트에서 구분해주는게 편하다고 해서..
+  //그냥 뭐 다 셋(Set)으로 취급해도 로직상 다를게 하나도 없음 그냥 프론트에서 구분해주는게 편하다고 해서..
 
   async getRoutesBetweenPoints(
     routeQuery: RouteBetweenPointsQuery

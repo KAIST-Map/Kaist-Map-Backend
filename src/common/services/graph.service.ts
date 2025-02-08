@@ -27,6 +27,7 @@ export class GraphService implements OnModuleInit {
             distance: true,
             isFreeOfRain: true,
             beamWeight: true,
+            inDormitory: true,
           },
         }),
         this.prisma.node.findMany(),

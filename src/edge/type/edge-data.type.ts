@@ -1,3 +1,5 @@
+import { Dormitory } from "@prisma/client";
+
 export type EdgeData = {
   id: number;
   nodeId1: number;
@@ -5,4 +7,5 @@ export type EdgeData = {
   distance: number;
   isFreeOfRain: boolean;
   beamWeight: number;
+  inDormitory: Dormitory;
 };

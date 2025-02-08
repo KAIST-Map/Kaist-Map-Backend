@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsBoolean, IsNotEmpty, IsNumber } from "class-validator";
 import { EdgeData } from "../type/edge-data.type";
-
+import { Dormitory } from "@prisma/client";
 export class EdgeDto {
   @ApiProperty({
     description: "엣지 아이디",
@@ -39,6 +39,12 @@ export class EdgeDto {
   })
   beamWeight!: number;
 
+  @ApiProperty({
+    description: "노드 1의 기숙사 여부",
+    example: "MALE",
+  })
+  inDormitory!: Dormitory;
+
   static from(edge: EdgeData): EdgeDto {
     return {
       id: edge.id,
@@ -47,6 +53,7 @@ export class EdgeDto {
       distance: edge.distance,
       isFreeOfRain: edge.isFreeOfRain,
       beamWeight: edge.beamWeight,
+      inDormitory: edge.inDormitory,
     };
   }
 
