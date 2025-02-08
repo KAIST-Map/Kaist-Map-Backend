@@ -55,12 +55,6 @@ export class RouteBetweenPointsQuery {
     type: Boolean,
   })
   wantBeam!: boolean;
-
-  @ApiProperty({
-    description: "성별",
-    enum: Gender,
-  })
-  gender!: Gender;
 }
 
 export class RouteBetweenBuildingsQuery {
@@ -97,12 +91,6 @@ export class RouteBetweenBuildingsQuery {
     type: Boolean,
   })
   wantBeam!: boolean;
-
-  @ApiProperty({
-    description: "성별",
-    enum: Gender,
-  })
-  gender!: Gender;
 }
 
 export class RoutePointToBuildingQuery {
@@ -148,12 +136,6 @@ export class RoutePointToBuildingQuery {
     type: Boolean,
   })
   wantBeam!: boolean;
-
-  @ApiProperty({
-    description: "성별",
-    enum: Gender,
-  })
-  gender!: Gender;
 }
 
 export class RouteBuildingToPointQuery {
@@ -199,10 +181,4 @@ export class RouteBuildingToPointQuery {
     type: Boolean,
   })
   wantBeam!: boolean;
-
-  @ApiProperty({
-    description: "성별",
-    enum: Gender,
-  })
-  gender!: Gender;
 }
