@@ -12,6 +12,16 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+enum Dormitory {
+  MALE
+  FEMALE
+  NOT_DORMITORY
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
 
 model Node {
   id Int @id @default(autoincrement())
@@ -36,6 +46,7 @@ model Edge {
   isFreeOfRain Boolean  @map("is_free_of_rain")
   distance Float
   beamWeight Float
+  inDormitory Dormitory @default(NOT_DORMITORY)
   
   node1 Node @relation("EdgeToNode1", fields: [nodeId1], references: [id])
   node2 Node @relation("EdgeToNode2", fields: [nodeId2], references: [id])

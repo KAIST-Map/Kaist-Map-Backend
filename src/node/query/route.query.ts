@@ -2,6 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsNumber, IsBoolean } from "class-validator";
 import { Transform } from "class-transformer";
 import { Type } from "class-transformer";
+import { Gender } from "@prisma/client";
 
 export class RouteBetweenPointsQuery {
   @IsNotEmpty()
@@ -55,6 +56,12 @@ export class RouteBetweenPointsQuery {
     type: Boolean,
   })
   wantBeam!: boolean;
+
+  @ApiProperty({
+    description: "성별",
+    enum: Gender,
+  })
+  gender!: Gender;
 }
 
 export class RouteBetweenBuildingsQuery {
@@ -91,6 +98,12 @@ export class RouteBetweenBuildingsQuery {
     type: Boolean,
   })
   wantBeam!: boolean;
+
+  @ApiProperty({
+    description: "성별",
+    enum: Gender,
+  })
+  gender!: Gender;
 }
 
 export class RoutePointToBuildingQuery {
@@ -136,6 +149,12 @@ export class RoutePointToBuildingQuery {
     type: Boolean,
   })
   wantBeam!: boolean;
+
+  @ApiProperty({
+    description: "성별",
+    enum: Gender,
+  })
+  gender!: Gender;
 }
 
 export class RouteBuildingToPointQuery {
@@ -181,4 +200,10 @@ export class RouteBuildingToPointQuery {
     type: Boolean,
   })
   wantBeam!: boolean;
+
+  @ApiProperty({
+    description: "성별",
+    enum: Gender,
+  })
+  gender!: Gender;
 }
